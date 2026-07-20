@@ -7,8 +7,7 @@ Topics demonstrated (all from the 065 syllabus):
   2. Pandas DataFrame
   3. Importing and Exporting CSV files (read_csv / to_csv)
   4. Data Visualization with Matplotlib (line, bar, histogram)
-
-Run this file in IDLE (Run > Run Module / F5).
+  
 """
 
 import pandas as pd
@@ -20,7 +19,7 @@ import matplotlib.pyplot as plt
 # ======================================================================
 print("=" * 55)
 print("1. PANDAS SERIES")
-print("=" * 55)
+print("=" * 55) 
 
 # Creating a Series from a list
 marks = pd.Series([120, 90, 75, 150, 60],
@@ -47,10 +46,10 @@ print("\n" + "=" * 55)
 print("2. READING CSV FILES INTO DATAFRAMES")
 print("=" * 55)
 
-patients = pd.read_csv("static/csv/patients.csv")
-doctors = pd.read_csv("static/csv/doctors.csv")
-appointments = pd.read_csv("static/csv/appointments.csv")
-bills = pd.read_csv("static/csv/bills.csv")
+patients = pd.read_csv("../static/csv/patients.csv")
+doctors = pd.read_csv("../static/csv/doctors.csv")
+appointments = pd.read_csv("../static/csv/appointments.csv")
+bills = pd.read_csv("../static/csv/bills.csv")
 
 print("\nPatients loaded:", len(patients), "rows")
 print("Doctors loaded :", len(doctors), "rows")
@@ -128,7 +127,6 @@ plt.title("Number of Doctors per Department")
 plt.xlabel("Department")
 plt.ylabel("Count")
 plt.xticks(rotation=45)
-plt.yticks(range(0, dept_count.values.max() + 1))
 plt.legend()
 plt.tight_layout()
 plt.savefig("graph_bar.png")

@@ -79,8 +79,9 @@ db.py             # MySQL connection pool + query/execute helpers
 modules/          # patients, doctors, appointments, billing, analytics
 templates/        # Jinja2 templates
 static/           # css, js, images, generated charts + csv
-schema.sql        # tables + base seed
-seed_*.sql        # additional seed data
+sql/              # schema.sql + seed_*.sql (database setup)
+scripts/          # push.sh (deploy helper)
+cbse_project/     # CBSE Class 12 IP syllabus script (ip_project.py) + its outputs
 Procfile          # gunicorn start command
 render.yaml       # Render blueprint
 requirements.txt  # Python dependencies
