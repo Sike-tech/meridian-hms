@@ -12,3 +12,4 @@ static/csv/*.csv
 
 .DS_Store
 *.log
+push.sh

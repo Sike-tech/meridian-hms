@@ -12,6 +12,7 @@ DB_CONFIG = {
     "user": os.environ.get("HMS_DB_USER", "root"),
     "password": os.environ.get("HMS_DB_PASSWORD", "rootpass"),
     "database": os.environ.get("HMS_DB_NAME", "hospital_db"),
+    "connection_timeout": int(os.environ.get("HMS_DB_TIMEOUT", 10)),
 }
 
 SECRET_KEY = os.environ.get("HMS_SECRET_KEY", "dev-key-change-this-in-production")

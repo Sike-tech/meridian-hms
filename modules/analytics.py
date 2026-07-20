@@ -66,7 +66,17 @@ print("=" * 60)
 print("SECTION 1: PANDAS — Series Operations")
 print("=" * 60)
 
-doctors_data = query("SELECT first_name, last_name, consultation_fee FROM doctors")
+
+def _safe_query(sql, params=None, one=False):
+    """Wrapper so a boot-time DB outage doesn't crash app import."""
+    try:
+        return query(sql, params, one)
+    except Exception as _e:
+        print(f"[analytics] DB unavailable at import: {_e}")
+        return None if one else []
+
+
+doctors_data = _safe_query("SELECT first_name, last_name, consultation_fee FROM doctors")
 
 # Series creation from dictionary
 fee_dict = {}
@@ -102,21 +112,21 @@ print("=" * 60)
 
 # DataFrame creation from SQL query (list of dicts)
 patients_df = pd.DataFrame(
-    query("SELECT patient_id, first_name, last_name, gender, blood_group, "
-          "admission_status, ward FROM patients")
+    _safe_query("SELECT patient_id, first_name, last_name, gender, blood_group, "
+                "admission_status, ward FROM patients")
 )
 doctors_df = pd.DataFrame(
-    query("SELECT doctor_id, first_name, last_name, specialization, "
-          "department, consultation_fee, status FROM doctors")
+    _safe_query("SELECT doctor_id, first_name, last_name, specialization, "
+                "department, consultation_fee, status FROM doctors")
 )
 appointments_df = pd.DataFrame(
-    query("SELECT appointment_id, appointment_date, appointment_time, "
-          "status, patient_id, doctor_id FROM appointments")
+    _safe_query("SELECT appointment_id, appointment_date, appointment_time, "
+                "status, patient_id, doctor_id FROM appointments")
 )
 bills_df = pd.DataFrame(
-    query("SELECT bill_id, patient_id, bill_date, consultation_fee, "
-          "medicine_charges, room_charges, other_charges, total_amount, "
-          "payment_status, payment_method FROM bills")
+    _safe_query("SELECT bill_id, patient_id, bill_date, consultation_fee, "
+                "medicine_charges, room_charges, other_charges, total_amount, "
+                "payment_status, payment_method FROM bills")
 )
 
 # Convert decimal columns to float
@@ -125,32 +135,35 @@ for col in ["consultation_fee", "medicine_charges", "room_charges",
     if col in bills_df.columns:
         bills_df[col] = pd.to_numeric(bills_df[col], errors="coerce").fillna(0.0)
 
-# head(), shape
-print("\nPatients DataFrame head(3):")
-print(patients_df.head(3))
-print(f"\nShape: {patients_df.shape}  (rows, columns)")
+try:
+    # head(), shape
+    print("\nPatients DataFrame head(3):")
+    print(patients_df.head(3))
+    print(f"\nShape: {patients_df.shape}  (rows, columns)")
 
-# describe()
-print("\nBills DataFrame describe():")
-print(bills_df[["consultation_fee", "total_amount"]].describe().round(2))
+    # describe()
+    print("\nBills DataFrame describe():")
+    print(bills_df[["consultation_fee", "total_amount"]].describe().round(2))
 
-# value_counts()
-print("\nPayment Status value_counts():")
-print(bills_df["payment_status"].value_counts())
+    # value_counts()
+    print("\nPayment Status value_counts():")
+    print(bills_df["payment_status"].value_counts())
 
-# groupby() with aggregate
-print("\nBills groupby('payment_status').sum() (total_amount):")
-print(bills_df.groupby("payment_status")["total_amount"].sum().round(2))
+    # groupby() with aggregate
+    print("\nBills groupby('payment_status').sum() (total_amount):")
+    print(bills_df.groupby("payment_status")["total_amount"].sum().round(2))
 
-# sort_values()
-print("\nDoctors sorted by consultation_fee (descending):")
-print(doctors_df[["first_name", "last_name", "consultation_fee"]]
-      .sort_values("consultation_fee", ascending=False).head(5))
+    # sort_values()
+    print("\nDoctors sorted by consultation_fee (descending):")
+    print(doctors_df[["first_name", "last_name", "consultation_fee"]]
+          .sort_values("consultation_fee", ascending=False).head(5))
 
-# Boolean indexing (filtering)
-print("\nPatients with admission_status == 'Admitted':")
-print(patients_df[patients_df["admission_status"] == "Admitted"]
-      [["first_name", "last_name", "ward"]])
+    # Boolean indexing (filtering)
+    print("\nPatients with admission_status == 'Admitted':")
+    print(patients_df[patients_df["admission_status"] == "Admitted"]
+          [["first_name", "last_name", "ward"]])
+except Exception as _e:
+    print(f"[analytics] summary prints skipped: {_e}")
 
 
 # ══════════════════════════════════════════════════════════════════
@@ -560,14 +573,17 @@ def dashboard():
 #  Generate all charts and CSV files (runs in both IDLE and Flask)
 # ══════════════════════════════════════════════════════════════════
 
-build_appointments_trend()
-build_department_load()
-build_revenue_by_month()
-build_payment_status()
-build_patient_admission_mix()
-build_bill_amount_histogram()
-build_fee_vs_total_scatter()
-build_gender_pie()
-build_weekday_appointments()
-export_csv_files()
+try:
+    build_appointments_trend()
+    build_department_load()
+    build_revenue_by_month()
+    build_payment_status()
+    build_patient_admission_mix()
+    build_bill_amount_histogram()
+    build_fee_vs_total_scatter()
+    build_gender_pie()
+    build_weekday_appointments()
+    export_csv_files()
+except Exception as _e:
+    print(f"[analytics] chart/CSV generation skipped at startup: {_e}")
 print("\nAll 9 charts + 4 CSV files generated successfully.")
