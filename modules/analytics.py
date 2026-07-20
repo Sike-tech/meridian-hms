@@ -1,7 +1,7 @@
 """
-analytics.py — Hospital Management System Analytics Dashboard
+CBSE Class 12 Project
 
-Demonstrates CBSE Class 12 Informatics Practices concepts:
+analytics.py — Hospital Management System Analytics Dashboard
 
 PANDAS: Series, DataFrame, head(), tail(), describe(), shape,
         groupby(), sort_values(), value_counts(), to_csv(), read_csv()
@@ -59,7 +59,7 @@ def _save(filename):
 
 # ══════════════════════════════════════════════════════════════════
 #  SECTION 1: PANDAS — Series Operations
-#  CBSE Concept: Series creation, head(), tail(), mathematical ops
+#  Concept: Series creation, head(), tail(), mathematical ops
 # ══════════════════════════════════════════════════════════════════
 
 print("=" * 60)
@@ -101,7 +101,7 @@ print(f"Std:    ₹{fee_series.std():.2f}")
 
 # ══════════════════════════════════════════════════════════════════
 #  SECTION 2: PANDAS — DataFrame Operations
-#  CBSE Concept: DataFrame from SQL, head(), tail(), describe(),
+#  Concept: DataFrame from SQL, head(), tail(), describe(),
 #                shape, value_counts(), groupby(), sort_values(),
 #                boolean filtering
 # ══════════════════════════════════════════════════════════════════
@@ -168,7 +168,7 @@ except Exception as _e:
 
 # ══════════════════════════════════════════════════════════════════
 #  SECTION 3: MATPLOTLIB — Graphs (one by one)
-#  CBSE Concept: Line, Bar, Histogram, Pie, Scatter
+#  Concept: Line, Bar, Histogram, Pie, Scatter
 # ══════════════════════════════════════════════════════════════════
 
 print("\n" + "=" * 60)
@@ -177,7 +177,7 @@ print("=" * 60)
 
 
 # ── Graph 1: Line Plot ───────────────────────────────────────────
-# CBSE: plt.plot() — shows trend over time
+# plt.plot() — shows trend over time
 def build_appointments_trend():
     print("\n[1/9] Line Plot — plt.plot() — Appointments Trend")
 
@@ -210,7 +210,7 @@ def build_appointments_trend():
 
 
 # ── Graph 2: Bar Graph ───────────────────────────────────────────
-# CBSE: plt.bar() — compares categories
+# plt.bar() — compares categories
 def build_department_load():
     print("[2/9] Bar Graph — plt.bar() — Department Workload")
 
@@ -240,7 +240,7 @@ def build_department_load():
 
 
 # ── Graph 3: Bar Graph ───────────────────────────────────────────
-# CBSE: plt.bar() — revenue per month
+# plt.bar() — revenue per month
 def build_revenue_by_month():
     print("[3/9] Bar Graph — plt.bar() — Revenue by Month")
 
@@ -269,7 +269,7 @@ def build_revenue_by_month():
 
 
 # ── Graph 4: Pie Chart ───────────────────────────────────────────
-# CBSE: plt.pie() — shows percentage distribution
+# plt.pie() — shows percentage distribution
 def build_payment_status():
     print("[4/9] Pie Chart — plt.pie() — Payment Status")
 
@@ -301,7 +301,7 @@ def build_payment_status():
 
 
 # ── Graph 5: Horizontal Bar ──────────────────────────────────────
-# CBSE: plt.barh() — horizontal comparison
+# plt.barh() — horizontal comparison
 def build_patient_admission_mix():
     print("[5/9] Horizontal Bar — plt.barh() — Patient Admission")
 
@@ -328,7 +328,7 @@ def build_patient_admission_mix():
 
 
 # ── Graph 6: Histogram ───────────────────────────────────────────
-# CBSE: plt.hist() — shows frequency distribution
+# plt.hist() — shows frequency distribution
 def build_bill_amount_histogram():
     print("[6/9] Histogram — plt.hist() — Bill Amount Distribution")
 
@@ -354,7 +354,7 @@ def build_bill_amount_histogram():
 
 
 # ── Graph 7: Scatter Plot ────────────────────────────────────────
-# CBSE: plt.scatter() — shows relationship between two variables
+# plt.scatter() — shows relationship between two variables
 def build_fee_vs_total_scatter():
     print("[7/9] Scatter Plot — plt.scatter() — Fee vs Total Bill")
 
@@ -388,7 +388,7 @@ def build_fee_vs_total_scatter():
 
 
 # ── Graph 8: Pie Chart ───────────────────────────────────────────
-# CBSE: plt.pie() — gender distribution
+# plt.pie() — gender distribution
 def build_gender_pie():
     print("[8/9] Pie Chart — plt.pie() — Gender Distribution")
 
@@ -420,7 +420,7 @@ def build_gender_pie():
 
 
 # ── Graph 9: Bar Graph ───────────────────────────────────────────
-# CBSE: plt.bar() — weekday pattern
+# plt.bar() — weekday pattern
 def build_weekday_appointments():
     print("[9/9] Bar Graph — plt.bar() — Weekday Appointments")
 
@@ -451,7 +451,7 @@ def build_weekday_appointments():
 
 # ══════════════════════════════════════════════════════════════════
 #  SECTION 4: CSV Import / Export
-#  CBSE Concept: to_csv() to save, read_csv() to load back
+#  Concept: to_csv() to save, read_csv() to load back
 # ══════════════════════════════════════════════════════════════════
 
 def export_csv_files():
@@ -459,14 +459,14 @@ def export_csv_files():
     print("SECTION 4: CSV Import / Export")
     print("=" * 60)
 
-    # CBSE: to_csv() — export DataFrame to CSV
+    # to_csv() — export DataFrame to CSV
     patients_df.to_csv(CSV_DIR + "/patients.csv", index=False)
     doctors_df.to_csv(CSV_DIR + "/doctors.csv", index=False)
     appointments_df.to_csv(CSV_DIR + "/appointments.csv", index=False)
     bills_df.to_csv(CSV_DIR + "/bills.csv", index=False)
     print("\nExported 4 CSV files to static/csv/")
 
-    # CBSE: read_csv() — import CSV back into DataFrame
+    # read_csv() — import CSV back into DataFrame
     patients_verify = pd.read_csv(CSV_DIR + "/patients.csv")
     print(f"Re-read patients.csv — {len(patients_verify)} rows loaded")
     print(patients_verify.head(3))
