@@ -1,0 +1,17 @@
+patient_id,first_name,last_name,gender,blood_group,admission_status,ward
+2,Priyanka,Das,Female,A+,Admitted,Cardiac Ward
+5,Mohammed,Ali,Male,A-,Admitted,Ortho Ward
+8,Neha,Kapoor,Female,A+,Admitted,Neuro Ward
+12,Ishita,Reddy,Female,B+,Admitted,General Ward
+15,Karan,Malhotra,Male,O-,Admitted,Cardiac Ward
+17,Rohit,Nair,Male,A-,Admitted,Neuro Ward
+21,Harsh,Vardhan,Male,B+,Admitted,Ortho Ward
+24,Kavya,Iyer,Female,AB+,Admitted,General Ward
+27,Ajay,Deshmukh,Male,A+,Admitted,Cardiac Ward
+32,Shreya,Mukherjee,Female,A+,Admitted,General Ward
+35,Sachin,Kulkarni,Male,A-,Admitted,Cardiac Ward
+37,Abhishek,Roy,Male,B-,Admitted,Neuro Ward
+41,Tarun,Reddy,Male,B+,Admitted,Ortho Ward
+44,Sana,Ansari,Female,AB+,Admitted,General Ward
+47,Yash,Patel,Male,O+,Admitted,Cardiac Ward
+52,Meenakshi,Sundaram,Female,A+,Admitted,Neuro Ward
