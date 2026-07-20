@@ -471,6 +471,12 @@ select::-ms-expand { display: none; }
   background-size: 12px;
 }
 
+/* Dark mode: soften badge colours so Completed/Discharged (gray) and
+   others aren't harshly bright on the dark card surface. */
+[data-theme="dark"] .badge-gray { background: #1E372F; color: #9DB0AC; }
+[data-theme="dark"] .badge-amber { background: #3A2E16; color: #E8C07A; }
+[data-theme="dark"] .badge-coral { background: #3A2220; color: #E8A79D; }
+
 input:focus, select:focus, textarea:focus {
   outline: 2px solid var(--teal);
   outline-offset: 1px;
