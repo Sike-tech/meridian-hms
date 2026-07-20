@@ -63,24 +63,46 @@ DARK_RCPARAMS = {
 }
 
 
+def _style_dark():
+    """Restyle the already-drawn figure/axes objects for dark mode.
+    rcParams alone won't restyle existing artists, so set properties
+    directly on the figure and each axes (fixes the white border bug)."""
+    fig = plt.gcf()
+    fig.patch.set_facecolor("#0E1B1A")
+    for ax in fig.get_axes():
+        ax.set_facecolor("#0E1B1A")
+        ax.tick_params(colors="#CFE0DC")
+        for spine in ax.spines.values():
+            spine.set_edgecolor("#3A554F")
+        if ax.xaxis.get_label():
+            ax.xaxis.get_label().set_color("#CFE0DC")
+        if ax.yaxis.get_label():
+            ax.yaxis.get_label().set_color("#CFE0DC")
+        for txt in ax.get_xticklabels() + ax.get_yticklabels():
+            txt.set_color("#CFE0DC")
+        leg = ax.get_legend()
+        if leg:
+            for text in leg.get_texts():
+                text.set_color("#CFE0DC")
+        for child in ax.get_children():
+            if isinstance(child, plt.Text) and child.get_text():
+                child.set_color("#CFE0DC")
+    return fig
+
+
 def _save(filename, dark=False):
     plt.tight_layout()
     if dark:
-        plt.rcParams.update(DARK_RCPARAMS)
+        _style_dark()
         save_name = filename.replace(".png", "_dark.png")
     else:
-        plt.rcParams.update({
-            "figure.facecolor": "white",
-            "axes.facecolor": "white",
-            "savefig.facecolor": "white",
-            "axes.edgecolor": GRID,
-            "axes.labelcolor": SLATE,
-            "text.color": SLATE,
-            "xtick.color": SLATE,
-            "ytick.color": SLATE,
-        })
+        fig = plt.gcf()
+        fig.patch.set_facecolor("white")
+        for ax in fig.get_axes():
+            ax.set_facecolor("white")
         save_name = filename
-    plt.savefig(CHART_DIR + "/" + save_name, dpi=150, bbox_inches="tight")
+    plt.savefig(CHART_DIR + "/" + save_name, dpi=150, bbox_inches="tight",
+                facecolor=plt.gcf().get_facecolor())
     plt.close()
 
 
@@ -622,4 +644,4 @@ try:
     export_csv_files()
 except Exception as _e:
     print(f"[analytics] chart/CSV generation skipped at startup: {_e}")
-print("\nAll 9 charts + 4 CSV files generated successfully.")
+print("\nAll 9 charts (light + dark) + 4 CSV files generated successfully.")
