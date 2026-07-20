@@ -91,19 +91,23 @@ def _style_dark():
 
 
 def _save(filename, dark=False):
+    """Save the chart. When dark=True, the same (still-open) figure is
+    saved once as light and once as dark, so the plotted data is kept.
+    The caller must close the figure afterwards."""
     plt.tight_layout()
+    fig = plt.gcf()
+    # Light variant
+    fig.patch.set_facecolor("white")
+    for ax in fig.get_axes():
+        ax.set_facecolor("white")
+    plt.savefig(CHART_DIR + "/" + filename, dpi=150, bbox_inches="tight",
+                facecolor="white")
+    # Dark variant
     if dark:
         _style_dark()
-        save_name = filename.replace(".png", "_dark.png")
-    else:
-        fig = plt.gcf()
-        fig.patch.set_facecolor("white")
-        for ax in fig.get_axes():
-            ax.set_facecolor("white")
-        save_name = filename
-    plt.savefig(CHART_DIR + "/" + save_name, dpi=150, bbox_inches="tight",
-                facecolor=plt.gcf().get_facecolor())
-    plt.close()
+        plt.savefig(CHART_DIR + "/" + filename.replace(".png", "_dark.png"),
+                    dpi=150, bbox_inches="tight",
+                    facecolor=plt.gcf().get_facecolor())
 
 
 # ══════════════════════════════════════════════════════════════════
@@ -255,8 +259,8 @@ def build_appointments_trend():
               fontweight="bold", loc="left")
     plt.grid(axis="y", color=GRID, linewidth=0.8)
     plt.gca().spines[["top", "right"]].set_visible(False)
-    _save("appointments_trend.png", dark=False)
     _save("appointments_trend.png", dark=True)
+    plt.close()
 
 
 # ── Graph 2: Bar Graph ───────────────────────────────────────────
@@ -286,8 +290,8 @@ def build_department_load():
     plt.grid(axis="y", color=GRID, linewidth=0.8)
     plt.gca().spines[["top", "right"]].set_visible(False)
     plt.xticks(rotation=20, ha="right")
-    _save("department_load.png", dark=False)
     _save("department_load.png", dark=True)
+    plt.close()
 
 
 # ── Graph 3: Bar Graph ───────────────────────────────────────────
@@ -316,8 +320,8 @@ def build_revenue_by_month():
     plt.title("Revenue by Month", fontsize=12, fontweight="bold", loc="left")
     plt.grid(axis="y", color=GRID, linewidth=0.8)
     plt.gca().spines[["top", "right"]].set_visible(False)
-    _save("revenue_by_month.png", dark=False)
     _save("revenue_by_month.png", dark=True)
+    plt.close()
 
 
 # ── Graph 4: Pie Chart ───────────────────────────────────────────
@@ -349,8 +353,8 @@ def build_payment_status():
 
     plt.title("Payment Status Distribution", fontsize=12,
               fontweight="bold", loc="left")
-    _save("payment_status.png", dark=False)
     _save("payment_status.png", dark=True)
+    plt.close()
 
 
 # ── Graph 5: Horizontal Bar ──────────────────────────────────────
@@ -377,8 +381,8 @@ def build_patient_admission_mix():
               fontweight="bold", loc="left")
     plt.grid(axis="x", color=GRID, linewidth=0.8)
     plt.gca().spines[["top", "right"]].set_visible(False)
-    _save("patient_admission_mix.png", dark=False)
     _save("patient_admission_mix.png", dark=True)
+    plt.close()
 
 
 # ── Graph 6: Histogram ───────────────────────────────────────────
@@ -404,8 +408,8 @@ def build_bill_amount_histogram():
               fontweight="bold", loc="left")
     plt.grid(axis="y", color=GRID, linewidth=0.8)
     plt.gca().spines[["top", "right"]].set_visible(False)
-    _save("bill_histogram.png", dark=False)
     _save("bill_histogram.png", dark=True)
+    plt.close()
 
 
 # ── Graph 7: Scatter Plot ────────────────────────────────────────
@@ -439,8 +443,8 @@ def build_fee_vs_total_scatter():
               fontweight="bold", loc="left")
     plt.grid(color=GRID, linewidth=0.8)
     plt.gca().spines[["top", "right"]].set_visible(False)
-    _save("fee_vs_total_scatter.png", dark=False)
     _save("fee_vs_total_scatter.png", dark=True)
+    plt.close()
 
 
 # ── Graph 8: Pie Chart ───────────────────────────────────────────
@@ -472,8 +476,8 @@ def build_gender_pie():
 
     plt.title("Patient Gender Distribution", fontsize=12,
               fontweight="bold", loc="left")
-    _save("gender_pie.png", dark=False)
     _save("gender_pie.png", dark=True)
+    plt.close()
 
 
 # ── Graph 9: Bar Graph ───────────────────────────────────────────
@@ -503,8 +507,8 @@ def build_weekday_appointments():
     plt.grid(axis="y", color=GRID, linewidth=0.8)
     plt.gca().spines[["top", "right"]].set_visible(False)
     plt.xticks(rotation=20, ha="right")
-    _save("weekday_appointments.png", dark=False)
     _save("weekday_appointments.png", dark=True)
+    plt.close()
 
 
 # ══════════════════════════════════════════════════════════════════
