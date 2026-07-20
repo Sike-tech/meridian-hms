@@ -179,7 +179,7 @@
     <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
       Appointments Trend
     </h3>
-    <img src="{{ url_for('static', filename='charts/appointments_trend.png') }}?v={{ v }}" alt="Appointments trend over last 30 days">
+    <img class="chart-img" src="{{ url_for('static', filename='charts/appointments_trend.png') }}?v={{ v }}" alt="Appointments trend over last 30 days">
   </div>
 
   <!-- 2. Department Workload -->
@@ -187,7 +187,7 @@
     <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
       Department Workload
     </h3>
-    <img src="{{ url_for('static', filename='charts/department_load.png') }}?v={{ v }}" alt="Appointments by department">
+    <img class="chart-img" src="{{ url_for('static', filename='charts/department_load.png') }}?v={{ v }}" alt="Appointments by department">
   </div>
 
   <!-- 3. Revenue by Month -->
@@ -195,7 +195,7 @@
     <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
       Revenue by Month
     </h3>
-    <img src="{{ url_for('static', filename='charts/revenue_by_month.png') }}?v={{ v }}" alt="Monthly revenue breakdown">
+    <img class="chart-img" src="{{ url_for('static', filename='charts/revenue_by_month.png') }}?v={{ v }}" alt="Monthly revenue breakdown">
   </div>
 
   <!-- 4. Payment Status -->
@@ -203,7 +203,7 @@
     <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
       Payment Status
     </h3>
-    <img src="{{ url_for('static', filename='charts/payment_status.png') }}?v={{ v }}" alt="Payment collection status">
+    <img class="chart-img" src="{{ url_for('static', filename='charts/payment_status.png') }}?v={{ v }}" alt="Payment collection status">
   </div>
 
   <!-- 5. Patient Admission Status -->
@@ -211,7 +211,7 @@
     <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
       Patient Admission Status
     </h3>
-    <img src="{{ url_for('static', filename='charts/patient_admission_mix.png') }}?v={{ v }}" alt="Patient admission distribution">
+    <img class="chart-img" src="{{ url_for('static', filename='charts/patient_admission_mix.png') }}?v={{ v }}" alt="Patient admission distribution">
   </div>
 
   <!-- 6. Bill Amount Distribution -->
@@ -219,7 +219,7 @@
     <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
       Bill Amount Distribution
     </h3>
-    <img src="{{ url_for('static', filename='charts/bill_histogram.png') }}?v={{ v }}" alt="Histogram of bill amounts">
+    <img class="chart-img" src="{{ url_for('static', filename='charts/bill_histogram.png') }}?v={{ v }}" alt="Histogram of bill amounts">
   </div>
 
   <!-- 7. Fee vs Total Bill -->
@@ -227,7 +227,7 @@
     <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
       Consultation Fee vs Total Bill
     </h3>
-    <img src="{{ url_for('static', filename='charts/fee_vs_total_scatter.png') }}?v={{ v }}" alt="Scatter plot of fees versus total bill">
+    <img class="chart-img" src="{{ url_for('static', filename='charts/fee_vs_total_scatter.png') }}?v={{ v }}" alt="Scatter plot of fees versus total bill">
   </div>
 
   <!-- 8. Gender Distribution -->
@@ -235,7 +235,7 @@
     <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
       Patient Gender Distribution
     </h3>
-    <img src="{{ url_for('static', filename='charts/gender_pie.png') }}?v={{ v }}" alt="Gender distribution pie chart">
+    <img class="chart-img" src="{{ url_for('static', filename='charts/gender_pie.png') }}?v={{ v }}" alt="Gender distribution pie chart">
   </div>
 
   <!-- 9. Weekly Appointment Pattern -->
@@ -243,7 +243,7 @@
     <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
       Weekly Appointment Pattern
     </h3>
-    <img src="{{ url_for('static', filename='charts/weekday_appointments.png') }}?v={{ v }}" alt="Appointments by day of week">
+    <img class="chart-img" src="{{ url_for('static', filename='charts/weekday_appointments.png') }}?v={{ v }}" alt="Appointments by day of week">
   </div>
 
 </div>
@@ -272,5 +272,21 @@
 </div>
 
 <script src="{{ url_for('static', filename='js/chart-viewer.js') }}"></script>
+<script>
+  // Swap chart images to the dark variant when the site theme is dark.
+  function applyChartTheme() {
+    var dark = document.documentElement.getAttribute("data-theme") === "dark";
+    document.querySelectorAll("img.chart-img").forEach(function (img) {
+      var src = img.getAttribute("src");
+      if (!src) return;
+      var base = src.split("?")[0];
+      var newBase = dark ? base.replace(".png", "_dark.png") : base.replace("_dark.png", ".png");
+      img.src = newBase + (src.indexOf("?") > -1 ? "?" + src.split("?")[1] : "");
+    });
+  }
+  applyChartTheme();
+  // Re-apply whenever the theme toggle fires.
+  document.addEventListener("themeChanged", applyChartTheme);
+</script>
 
 {% endblock %}

@@ -50,10 +50,32 @@ plt.rcParams.update({
     "savefig.facecolor": "white",
 })
 
+# Dark-mode chart styling (matches [data-theme="dark"] surface)
+DARK_RCPARAMS = {
+    "axes.edgecolor": "#3A554F",
+    "axes.labelcolor": "#CFE0DC",
+    "text.color": "#CFE0DC",
+    "xtick.color": "#CFE0DC",
+    "ytick.color": "#CFE0DC",
+    "figure.facecolor": "#0E1B1A",
+    "axes.facecolor": "#0E1B1A",
+    "savefig.facecolor": "#0E1B1A",
+}
+
 
 def _save(filename):
     plt.tight_layout()
+    # Light variant
+    plt.rcParams.update({
+        "figure.facecolor": "white",
+        "axes.facecolor": "white",
+        "savefig.facecolor": "white",
+    })
     plt.savefig(CHART_DIR + "/" + filename, dpi=150, bbox_inches="tight")
+    # Dark variant (same figure, re-styled)
+    plt.rcParams.update(DARK_RCPARAMS)
+    plt.savefig(CHART_DIR + "/" + filename.replace(".png", "_dark.png"),
+                dpi=150, bbox_inches="tight")
     plt.close()
 
 

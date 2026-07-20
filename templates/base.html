@@ -101,6 +101,7 @@
         root.setAttribute('data-theme', 'dark');
         localStorage.setItem('theme', 'dark');
       }
+      document.dispatchEvent(new Event('themeChanged'));
     }
   </script>
 </body>

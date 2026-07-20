@@ -43,6 +43,27 @@
   --overlay-alpha: 0.9;
 }
 
+/* Dark mode: --deep-teal is near-black on the dark card, so KPI numbers
+   and the welcome title must use the bright --teal to stay readable. */
+[data-theme="dark"] .kpi-value { color: var(--teal); }
+[data-theme="dark"] .welcome-title { color: var(--teal); }
+
+/* Dark mode: form controls and outline/danger buttons are hard-coded white,
+   so give them a dark surface with light text and borders. */
+[data-theme="dark"] input,
+[data-theme="dark"] select,
+[data-theme="dark"] textarea {
+  background: #0E211F;
+  color: var(--ink);
+  border-color: var(--border);
+}
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder { color: var(--muted); }
+[data-theme="dark"] .btn-outline { background: transparent; color: var(--teal); border-color: var(--teal); }
+[data-theme="dark"] .btn-outline:hover { background: var(--teal-soft); }
+[data-theme="dark"] .btn-danger { background: transparent; color: var(--coral); border-color: #5E3A36; }
+[data-theme="dark"] .btn-danger:hover { background: #3A221F; }
+
 .theme-toggle {
   background: none;
   border: none;
