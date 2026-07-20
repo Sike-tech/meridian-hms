@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% from "_pagination.html" import pagination %}
+{% block title %}Meridian - Billing{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div>
+    <h1>Billing &amp; Invoices</h1>
+    <div class="subtitle">Manage invoices and payment tracking</div>
+  </div>
+  <a href="{{ url_for('billing.new_bill') }}" class="btn btn-primary">+ Create Invoice</a>
+</div>
+
+<div class="kpi-grid" style="margin-bottom:20px">
+  <div class="kpi-card">
+    <div class="kpi-label">Total Billed</div>
+    <div class="kpi-value mono">₹{{ "%.0f"|format(totals.total_billed) }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Total Paid</div>
+    <div class="kpi-value mono" style="color:var(--teal)">₹{{ "%.0f"|format(totals.total_paid) }}</div>
+  </div>
+  <div class="kpi-card accent-coral">
+    <div class="kpi-label">Total Due</div>
+    <div class="kpi-value mono">₹{{ "%.0f"|format(totals.total_due) }}</div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:20px">
+  <form method="GET">
+    <div class="filter-row">
+      <div class="filter-field">
+        <label for="patient">Search Patient</label>
+        <input type="text" id="patient" name="patient" placeholder="Patient name..." value="{{ patient }}">
+      </div>
+      <div class="filter-field">
+        <label for="bill_no">Bill Number</label>
+        <input type="text" id="bill_no" name="bill_no" placeholder="Bill #..." value="{{ bill_no }}">
+      </div>
+    </div>
+    <div class="filter-row" style="margin-top:14px">
+      <div class="filter-field">
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" value="{{ date_filter }}">
+      </div>
+      <div class="filter-field">
+        <label for="status">Status</label>
+        <select id="status" name="status">
+          <option value="">All statuses</option>
+          <option {{ 'selected' if status=='Paid' }}>Paid</option>
+          <option {{ 'selected' if status=='Pending' }}>Pending</option>
+          <option {{ 'selected' if status=='Partially Paid' }}>Partially Paid</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary btn-sm" style="align-self:flex-end">Filter</button>
+    </div>
+  </form>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>Bill #</th><th>Patient</th><th>Date</th><th>Consultation</th><th>Medicine</th><th>Room</th><th>Other</th><th>Total</th><th>Status</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for b in bills %}
+      <tr>
+        <td>#{{ b.bill_id }}</td>
+        <td>{{ b.first_name }} {{ b.last_name }}</td>
+        <td>{{ b.bill_date }}</td>
+        <td>₹{{ b.consultation_fee }}</td>
+        <td>₹{{ b.medicine_charges }}</td>
+        <td>₹{{ b.room_charges }}</td>
+        <td>₹{{ b.other_charges }}</td>
+        <td><strong>₹{{ b.total_amount }}</strong></td>
+        <td>
+          {% if b.payment_status == 'Paid' %}<span class="badge badge-teal">{{ b.payment_status }}</span>
+          {% elif b.payment_status == 'Pending' %}<span class="badge badge-coral">{{ b.payment_status }}</span>
+          {% else %}<span class="badge badge-amber">{{ b.payment_status }}</span>{% endif %}
+        </td>
+        <td>
+          {% if b.payment_status != 'Paid' %}
+          <form method="POST" action="{{ url_for('billing.update_payment_status', bill_id=b.bill_id) }}" style="display:inline">
+            <input type="hidden" name="payment_status" value="Paid">
+            <input type="hidden" name="payment_method" value="Cash">
+            <button type="submit" class="btn btn-sm btn-primary">Mark Paid</button>
+          </form>
+          {% endif %}
+          <form method="POST" action="{{ url_for('billing.delete_bill', bill_id=b.bill_id) }}" style="display:inline">
+            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this invoice?')">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="10" class="empty-state">No invoices found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{{ pagination(page, total_pages, total) }}
+{% endblock %}

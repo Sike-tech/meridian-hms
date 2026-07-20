@@ -1,0 +1,53 @@
+-- =====================================================================
+-- More Bills — spread across months, mixed statuses
+--   mysql -u root -p hospital_db < seed_bills.sql
+-- =====================================================================
+
+USE hospital_db;
+
+INSERT INTO bills (patient_id, appointment_id, bill_date, consultation_fee, medicine_charges, room_charges, other_charges, payment_status, payment_method) VALUES
+(11, NULL, DATE_SUB(CURDATE(), INTERVAL 5 MONTH), 1600, 400, 0, 150, 'Paid', 'Card'),
+(12, NULL, DATE_SUB(CURDATE(), INTERVAL 5 MONTH), 1300, 900, 6000, 400, 'Paid', 'Insurance'),
+(13, NULL, DATE_SUB(CURDATE(), INTERVAL 5 MONTH), 1250, 250, 0, 0, 'Paid', 'UPI'),
+(14, NULL, DATE_SUB(CURDATE(), INTERVAL 5 MONTH), 1900, 700, 0, 300, 'Paid', 'Cash'),
+(15, NULL, DATE_SUB(CURDATE(), INTERVAL 4 MONTH), 1600, 500, 4000, 250, 'Paid', 'Card'),
+(16, NULL, DATE_SUB(CURDATE(), INTERVAL 4 MONTH), 1050, 300, 0, 100, 'Paid', 'UPI'),
+(17, NULL, DATE_SUB(CURDATE(), INTERVAL 4 MONTH), 1800, 3000, 9000, 1200, 'Partially Paid', 'Insurance'),
+(18, NULL, DATE_SUB(CURDATE(), INTERVAL 4 MONTH), 950, 180, 0, 0, 'Paid', 'Cash'),
+(19, NULL, DATE_SUB(CURDATE(), INTERVAL 3 MONTH), 2100, 4200, 15000, 2500, 'Partially Paid', 'Insurance'),
+(20, NULL, DATE_SUB(CURDATE(), INTERVAL 3 MONTH), 1100, 220, 0, 50, 'Paid', 'UPI'),
+(21, NULL, DATE_SUB(CURDATE(), INTERVAL 3 MONTH), 1250, 600, 3500, 300, 'Paid', 'Card'),
+(22, NULL, DATE_SUB(CURDATE(), INTERVAL 3 MONTH), 850, 0, 0, 0, 'Pending', NULL),
+(23, NULL, DATE_SUB(CURDATE(), INTERVAL 2 MONTH), 1400, 350, 0, 100, 'Paid', 'Cash'),
+(24, NULL, DATE_SUB(CURDATE(), INTERVAL 2 MONTH), 1500, 800, 5000, 400, 'Paid', 'Insurance'),
+(25, NULL, DATE_SUB(CURDATE(), INTERVAL 2 MONTH), 1000, 150, 0, 0, 'Paid', 'UPI'),
+(26, NULL, DATE_SUB(CURDATE(), INTERVAL 2 MONTH), 1700, 500, 0, 200, 'Pending', NULL),
+(27, NULL, DATE_SUB(CURDATE(), INTERVAL 2 MONTH), 1350, 900, 4500, 350, 'Partially Paid', 'Card'),
+(28, NULL, DATE_SUB(CURDATE(), INTERVAL 1 MONTH), 1600, 300, 0, 100, 'Paid', 'UPI'),
+(29, NULL, DATE_SUB(CURDATE(), INTERVAL 1 MONTH), 1450, 2000, 7000, 800, 'Partially Paid', 'Insurance'),
+(30, NULL, DATE_SUB(CURDATE(), INTERVAL 1 MONTH), 1300, 400, 0, 150, 'Paid', 'Cash'),
+(31, NULL, DATE_SUB(CURDATE(), INTERVAL 1 MONTH), 800, 100, 0, 0, 'Paid', 'UPI'),
+(32, NULL, DATE_SUB(CURDATE(), INTERVAL 1 MONTH), 1300, 1500, 6000, 500, 'Pending', NULL),
+(33, NULL, DATE_SUB(CURDATE(), INTERVAL 3 WEEK), 1700, 250, 0, 100, 'Paid', 'Card'),
+(34, NULL, DATE_SUB(CURDATE(), INTERVAL 3 WEEK), 1000, 180, 0, 0, 'Paid', 'Cash'),
+(35, NULL, DATE_SUB(CURDATE(), INTERVAL 3 WEEK), 1500, 3000, 10000, 1500, 'Partially Paid', 'Insurance'),
+(36, NULL, DATE_SUB(CURDATE(), INTERVAL 2 WEEK), 1050, 200, 0, 50, 'Paid', 'UPI'),
+(37, NULL, DATE_SUB(CURDATE(), INTERVAL 2 WEEK), 1800, 450, 0, 200, 'Pending', NULL),
+(38, NULL, DATE_SUB(CURDATE(), INTERVAL 2 WEEK), 950, 120, 0, 0, 'Paid', 'Cash'),
+(39, NULL, DATE_SUB(CURDATE(), INTERVAL 2 WEEK), 2100, 5000, 18000, 3000, 'Partially Paid', 'Insurance'),
+(40, NULL, DATE_SUB(CURDATE(), INTERVAL 1 WEEK), 1100, 300, 0, 100, 'Paid', 'UPI'),
+(41, NULL, DATE_SUB(CURDATE(), INTERVAL 1 WEEK), 1250, 700, 3500, 300, 'Paid', 'Card'),
+(42, NULL, DATE_SUB(CURDATE(), INTERVAL 1 WEEK), 1400, 250, 0, 0, 'Pending', NULL),
+(43, NULL, DATE_SUB(CURDATE(), INTERVAL 5 DAY), 800, 150, 0, 0, 'Paid', 'Cash'),
+(44, NULL, DATE_SUB(CURDATE(), INTERVAL 5 DAY), 1600, 1800, 6500, 600, 'Partially Paid', 'Insurance'),
+(45, NULL, DATE_SUB(CURDATE(), INTERVAL 4 DAY), 1450, 350, 0, 100, 'Paid', 'UPI'),
+(46, NULL, DATE_SUB(CURDATE(), INTERVAL 3 DAY), 1000, 200, 0, 0, 'Pending', NULL),
+(47, NULL, DATE_SUB(CURDATE(), INTERVAL 2 DAY), 1600, 400, 0, 150, 'Paid', 'Card'),
+(48, NULL, DATE_SUB(CURDATE(), INTERVAL 2 DAY), 1800, 900, 5000, 400, 'Partially Paid', 'Insurance'),
+(49, NULL, DATE_SUB(CURDATE(), INTERVAL 1 DAY), 1500, 300, 0, 100, 'Paid', 'UPI'),
+(50, NULL, DATE_SUB(CURDATE(), INTERVAL 1 DAY), 1250, 550, 3000, 250, 'Paid', 'Cash'),
+(51, NULL, CURDATE(), 1350, 400, 0, 100, 'Pending', NULL),
+(52, NULL, CURDATE(), 1900, 250, 0, 0, 'Paid', 'Card'),
+(53, NULL, CURDATE(), 800, 180, 0, 0, 'Pending', NULL),
+(54, NULL, CURDATE(), 950, 300, 0, 50, 'Paid', 'UPI'),
+(55, NULL, CURDATE(), 1500, 1200, 5500, 500, 'Partially Paid', 'Insurance');

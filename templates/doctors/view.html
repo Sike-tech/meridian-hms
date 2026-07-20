@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Dr. {{ doctor.first_name }} {{ doctor.last_name }}{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div>
+    <h1>Dr. {{ doctor.first_name }} {{ doctor.last_name }}</h1>
+    <div class="subtitle">{{ doctor.specialization }} &middot; {{ doctor.department }}</div>
+  </div>
+  <div class="actions-row">
+    <a href="{{ url_for('doctors.edit_doctor', doctor_id=doctor.doctor_id) }}" class="btn btn-outline">Edit</a>
+    <form method="POST" action="{{ url_for('doctors.delete_doctor', doctor_id=doctor.doctor_id) }}">
+      <button type="submit" class="btn btn-danger" onclick="return confirm('Remove this doctor?')">Delete</button>
+    </form>
+  </div>
+</div>
+
+<div class="kpi-grid" style="margin-bottom:20px">
+  <div class="kpi-card">
+    <div class="kpi-label">Phone</div>
+    <div class="kpi-value" style="font-size:16px">{{ doctor.phone or '—' }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Email</div>
+    <div class="kpi-value" style="font-size:16px">{{ doctor.email or '—' }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Status</div>
+    <div class="kpi-value" style="font-size:16px">{{ doctor.status }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Consultation Fee</div>
+    <div class="kpi-value" style="font-size:16px">₹{{ doctor.consultation_fee }}</div>
+  </div>
+</div>
+
+<h2 style="margin-bottom:12px">Appointments</h2>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Time</th><th>Patient</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      {% for a in appointments %}
+      <tr>
+        <td>{{ a.appointment_date }}</td>
+        <td>{{ a.appointment_time }}</td>
+        <td>{{ a.first_name }} {{ a.last_name }}</td>
+        <td><span class="badge badge-teal">{{ a.status }}</span></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="empty-state">No appointments yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

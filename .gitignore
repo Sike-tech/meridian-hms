@@ -1,0 +1,14 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.env
+venv/
+.venv/
+env/
+
+static/charts/*.png
+static/csv/*.csv
+/charts/
+
+.DS_Store
+*.log

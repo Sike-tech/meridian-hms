@@ -1,0 +1,276 @@
+{% extends "base.html" %}
+{% block title %}Meridian - Analytics{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div>
+    <h1>Analytics</h1>
+    <div class="subtitle">Hospital performance overview and reporting</div>
+  </div>
+</div>
+
+<!-- ── KPI Cards ────────────────────────────────────────────────── -->
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-label">Total Patients</div>
+    <div class="kpi-value mono">{{ kpis.total_patients }}</div>
+  </div>
+  <div class="kpi-card accent-amber">
+    <div class="kpi-label">Currently Admitted</div>
+    <div class="kpi-value mono">{{ kpis.admitted }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Today's Appointments</div>
+    <div class="kpi-value mono">{{ kpis.todays_appointments }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Month Revenue</div>
+    <div class="kpi-value mono">₹{{ "%.0f"|format(kpis.month_revenue) }}</div>
+  </div>
+  <div class="kpi-card accent-coral">
+    <div class="kpi-label">Pending Dues</div>
+    <div class="kpi-value mono">₹{{ "%.0f"|format(kpis.pending_dues) }}</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- FINANCIAL OVERVIEW -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h2 style="margin: 28px 0 14px; border-bottom: 2px solid var(--teal); padding-bottom: 6px;">
+  Financial Overview
+</h2>
+
+<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap:16px; margin-bottom:24px;">
+
+  <!-- Doctor Fee Schedule -->
+  <div class="card">
+    <h3 style="margin:0 0 10px; font-size:15px; color:var(--deep-teal);">
+      Doctor Fee Schedule
+    </h3>
+    <p style="font-size:12px; color:var(--muted); margin:0 0 8px;">
+      Consultation fees across all active doctors
+    </p>
+    <table style="font-size:13px;">
+      <thead><tr><th>Doctor</th><th>Fee (₹)</th></tr></thead>
+      <tbody>
+        {% for name, fee in fee_series_head.items() %}
+        <tr><td>{{ name }}</td><td class="mono">{{ fee }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <p style="font-size:11px; color:var(--muted); margin:8px 0 0;">
+      Showing top 5 of {{ fee_series_head|length + fee_series_tail|length }} doctors
+    </p>
+  </div>
+
+  <!-- Fee Statistics -->
+  <div class="card">
+    <h3 style="margin:0 0 10px; font-size:15px; color:var(--deep-teal);">
+      Fee Statistics
+    </h3>
+    <p style="font-size:12px; color:var(--muted); margin:0 0 8px;">
+      Summary of consultation fee distribution
+    </p>
+    <table style="font-size:13px;">
+      <thead><tr><th>Metric</th><th>Amount (₹)</th></tr></thead>
+      <tbody>
+        <tr><td>Average Fee</td><td class="mono">{{ series_stats.mean }}</td></tr>
+        <tr><td>Highest Fee</td><td class="mono">{{ series_stats.max }}</td></tr>
+        <tr><td>Lowest Fee</td><td class="mono">{{ series_stats.min }}</td></tr>
+        <tr><td>Total (all doctors)</td><td class="mono">{{ series_stats.sum }}</td></tr>
+        <tr><td>Std Deviation</td><td class="mono">{{ series_stats.std }}</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Patient Registry Summary -->
+  <div class="card" style="grid-column: 1 / -1; overflow:hidden;">
+    <h3 style="margin:0 0 10px; font-size:15px; color:var(--deep-teal);">
+      Patient Registry
+    </h3>
+    <p style="font-size:12px; color:var(--muted); margin:0 0 8px;">
+      Recent registrations ({{ patients_summary.shape[0] }} total)
+    </p>
+    <div style="overflow-x:auto;">
+      <table style="font-size:13px;">
+        <thead>
+          <tr>
+            {% for col in patients_summary.columns %}
+            <th>{{ col }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in patients_summary.head %}
+          <tr>
+            {% for col in patients_summary.columns %}
+            <td>{{ row[col] or '—' }}</td>
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Billing Summary -->
+  <div class="card" style="grid-column: 1 / -1; overflow:hidden;">
+    <h3 style="margin:0 0 10px; font-size:15px; color:var(--deep-teal);">
+      Billing Summary
+    </h3>
+    <p style="font-size:12px; color:var(--muted); margin:0 0 8px;">
+      Statistical breakdown of all invoices
+    </p>
+    {% if bills_summary.describe %}
+    <div style="overflow-x:auto;">
+    <table style="font-size:12px;">
+      <thead>
+        <tr>
+          <th>Stat</th>
+          {% for col in bills_summary.describe.keys() %}
+          <th>{{ col }}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for stat in ['count', 'mean', 'std', 'min', '25%', '50%', '75%', 'max'] %}
+        <tr>
+          <td><strong>{{ stat }}</strong></td>
+          {% for col in bills_summary.describe.keys() %}
+          <td class="mono">{{ "%.1f"|format(bills_summary.describe[col].get(stat, 0)) if bills_summary.describe[col].get(stat) else '—' }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Data Exports -->
+  <div class="card">
+    <h3 style="margin:0 0 10px; font-size:15px; color:var(--deep-teal);">
+      Data Exports
+    </h3>
+    <p style="font-size:12px; color:var(--muted); margin:0 0 8px;">
+      Exported reports available for download
+    </p>
+    <ul style="font-size:13px; margin:0; padding-left:18px;">
+      {% for f in csv_info.exported_files %}
+      <li><a href="{{ url_for('static', filename='csv/' + f) }}" target="_blank">{{ f }}</a></li>
+      {% endfor %}
+    </ul>
+    <p style="font-size:12px; color:var(--muted); margin:8px 0 0;">
+      {{ csv_info.patients_rows }} patient records exported
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- TRENDS & VISUALIZATIONS -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h2 style="margin: 28px 0 14px; border-bottom: 2px solid var(--teal); padding-bottom: 6px;">
+  Trends &amp; Visualizations
+</h2>
+
+<div class="chart-grid">
+
+  <!-- 1. Appointments Trend -->
+  <div class="card chart-card">
+    <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
+      Appointments Trend
+    </h3>
+    <img src="{{ url_for('static', filename='charts/appointments_trend.png') }}?v={{ v }}" alt="Appointments trend over last 30 days">
+  </div>
+
+  <!-- 2. Department Workload -->
+  <div class="card chart-card">
+    <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
+      Department Workload
+    </h3>
+    <img src="{{ url_for('static', filename='charts/department_load.png') }}?v={{ v }}" alt="Appointments by department">
+  </div>
+
+  <!-- 3. Revenue by Month -->
+  <div class="card chart-card">
+    <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
+      Revenue by Month
+    </h3>
+    <img src="{{ url_for('static', filename='charts/revenue_by_month.png') }}?v={{ v }}" alt="Monthly revenue breakdown">
+  </div>
+
+  <!-- 4. Payment Status -->
+  <div class="card chart-card">
+    <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
+      Payment Status
+    </h3>
+    <img src="{{ url_for('static', filename='charts/payment_status.png') }}?v={{ v }}" alt="Payment collection status">
+  </div>
+
+  <!-- 5. Patient Admission Status -->
+  <div class="card chart-card">
+    <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
+      Patient Admission Status
+    </h3>
+    <img src="{{ url_for('static', filename='charts/patient_admission_mix.png') }}?v={{ v }}" alt="Patient admission distribution">
+  </div>
+
+  <!-- 6. Bill Amount Distribution -->
+  <div class="card chart-card">
+    <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
+      Bill Amount Distribution
+    </h3>
+    <img src="{{ url_for('static', filename='charts/bill_histogram.png') }}?v={{ v }}" alt="Histogram of bill amounts">
+  </div>
+
+  <!-- 7. Fee vs Total Bill -->
+  <div class="card chart-card">
+    <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
+      Consultation Fee vs Total Bill
+    </h3>
+    <img src="{{ url_for('static', filename='charts/fee_vs_total_scatter.png') }}?v={{ v }}" alt="Scatter plot of fees versus total bill">
+  </div>
+
+  <!-- 8. Gender Distribution -->
+  <div class="card chart-card">
+    <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
+      Patient Gender Distribution
+    </h3>
+    <img src="{{ url_for('static', filename='charts/gender_pie.png') }}?v={{ v }}" alt="Gender distribution pie chart">
+  </div>
+
+  <!-- 9. Weekly Appointment Pattern -->
+  <div class="card chart-card">
+    <h3 style="margin:0 0 6px; font-size:14px; color:var(--deep-teal);">
+      Weekly Appointment Pattern
+    </h3>
+    <img src="{{ url_for('static', filename='charts/weekday_appointments.png') }}?v={{ v }}" alt="Appointments by day of week">
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- CHART VIEWER MODAL -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="chart-viewer-overlay" id="chart-viewer-overlay">
+  <div class="chart-viewer">
+    <div class="chart-viewer-header">
+      <h3>Chart Title</h3>
+      <button class="chart-viewer-close" title="Close">&times;</button>
+    </div>
+    <div class="chart-viewer-body">
+      <img src="" alt="Chart">
+    </div>
+    <div class="chart-viewer-toolbar">
+      <button class="zoom-out" title="Zoom Out">&#8722;</button>
+      <span class="zoom-label">100%</span>
+      <button class="zoom-in" title="Zoom In">+</button>
+      <button class="zoom-rotate" title="Rotate 90&deg;">&#8635;</button>
+      <button class="zoom-reset" title="Reset View">&#8634;</button>
+      <button class="zoom-download" title="Download PNG">&#8615;</button>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/chart-viewer.js') }}"></script>
+
+{% endblock %}

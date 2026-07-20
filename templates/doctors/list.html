@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% from "_pagination.html" import pagination %}
+
+{% block title %}Meridian - Doctors{% endblock %}
+
+{% block content %}
+
+<div class="topbar">
+
+    <div>
+        <h1>Doctors</h1>
+        <div class="subtitle">Manage hospital doctors and specialists</div>
+    </div>
+
+    <a href="{{ url_for('doctors.new_doctor') }}" class="btn btn-primary">+ Add Doctor</a>
+
+</div>
+
+<div class="card" style="margin-bottom:20px">
+
+    <form method="GET">
+
+        <div class="filter-row">
+            <div class="filter-field">
+                <label for="q">Doctor</label>
+                <input type="text" id="q" name="q" placeholder="Search doctor..." value="{{ search }}">
+            </div>
+            <div class="filter-field">
+                <label for="department">Department</label>
+                <input type="text" id="department" name="department" placeholder="Department" value="{{ department }}">
+            </div>
+        </div>
+
+        <div class="filter-row" style="margin-top:14px">
+            <div class="filter-field">
+                <label for="specialization">Specialization</label>
+                <select id="specialization" name="specialization">
+                    <option value="">All specializations</option>
+                    {% for s in specializations %}
+                    <option {{ 'selected' if specialization == s.specialization }}>{{ s.specialization }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm" style="align-self:flex-end">Filter</button>
+        </div>
+
+    </form>
+
+</div>
+
+<div class="card">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Name</th>
+<th>Department</th>
+<th>Specialization</th>
+<th>Status</th>
+<th>Phone</th>
+<th>Fee</th>
+<th></th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for doctor in doctors %}
+
+<tr>
+
+<td>
+
+<a href="{{ url_for('doctors.view_doctor',
+doctor_id=doctor.doctor_id) }}">
+
+{{ doctor.first_name }}
+{{ doctor.last_name }}
+
+</a>
+
+</td>
+
+<td>{{ doctor.department }}</td>
+
+<td>{{ doctor.specialization }}</td>
+
+<td>{{ doctor.status }}</td>
+
+<td>{{ doctor.phone }}</td>
+
+<td>₹{{ doctor.consultation_fee }}</td>
+
+<td>
+
+<a href="{{ url_for('doctors.edit_doctor',
+doctor_id=doctor.doctor_id) }}">
+
+Edit
+
+</a>
+
+</td>
+
+</tr>
+
+{% else %}
+
+<tr>
+
+<td colspan="7">
+
+No doctors available.
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{{ pagination(page, total_pages, total) }}
+
+{% endblock %}

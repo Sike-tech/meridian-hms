@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: meridian-hms
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    envVars:
+      - key: HMS_SECRET_KEY
+        generateValue: true
+      - key: HMS_DB_HOST
+        sync: false
+      - key: HMS_DB_PORT
+        sync: false
+      - key: HMS_DB_USER
+        sync: false
+      - key: HMS_DB_PASSWORD
+        sync: false
+      - key: HMS_DB_NAME
+        sync: false

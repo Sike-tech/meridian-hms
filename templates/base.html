@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}{% endblock %}</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/Meridian_logo.png') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <script>
+    (function () {
+      var t = localStorage.getItem('theme');
+      if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+    })();
+  </script>
+</head>
+<body>
+  <div class="app-shell">
+    <nav class="sidebar">
+      <div class="brand">
+        <img src="{{ url_for('static', filename='images/Meridian_logo.png') }}" alt="Logo" class="brand-logo">
+        Meridian
+      </div>
+
+      <svg class="pulse-divider" viewBox="0 0 220 20" preserveAspectRatio="none">
+        <polyline points="0,10 60,10 68,10 74,2 80,18 86,10 94,10 220,10"
+                  fill="none" stroke="#5FBFB3" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+
+      <a class="nav-link {{ 'active' if request.endpoint == 'home' }}" href="{{ url_for('home') }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v10h14V10"/></svg>
+        Home
+      </a>
+      <a class="nav-link {{ 'active' if request.blueprint == 'patients' }}" href="{{ url_for('patients.list_patients') }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 4-6 7.5-6s6 2 7.5 6"/></svg>
+        Patients
+      </a>
+      <a class="nav-link {{ 'active' if request.blueprint == 'doctors' }}" href="{{ url_for('doctors.list_doctors') }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 3v4a3 3 0 0 0 6 0V3"/><path d="M12 13v4"/><circle cx="12" cy="19" r="2"/><path d="M6 8c0 5 2.5 7 6 7s6-2 6-7"/></svg>
+        Doctors
+      </a>
+      <a class="nav-link {{ 'active' if request.blueprint == 'appointments' }}" href="{{ url_for('appointments.list_appointments') }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M3.5 9.5h17"/><path d="M8 3v4M16 3v4"/></svg>
+        Appointments
+      </a>
+      <a class="nav-link {{ 'active' if request.blueprint == 'billing' }}" href="{{ url_for('billing.list_bills') }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="3.5" width="16" height="17" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+        Billing
+      </a>
+      <a class="nav-link {{ 'active' if request.blueprint == 'analytics' }}" href="{{ url_for('analytics.dashboard') }}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 20V10M12 20V4M20 20v-7"/></svg>
+        Analytics
+      </a>
+
+      <button type="button" class="nav-link theme-toggle" id="themeToggle" onclick="toggleTheme()">
+        <svg class="theme-icon-dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="theme-icon-light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <span class="theme-label theme-label-dark">Dark Mode</span>
+        <span class="theme-label theme-label-light">Light Mode</span>
+      </button>
+    </nav>
+
+    <main class="main">
+      {% if request.endpoint == 'home' %}
+      <div class="top-header">
+        <div></div>
+        <div class="account-area">
+          <img src="{{ url_for('static', filename='images/Me.jpg') }}" alt="Account" class="account-avatar">
+          <div class="account-info">
+            <span class="account-name">{{ employee_name|default('Admin User') }}</span>
+            <span class="account-role">{{ employee_role|default('Administrator') }}</span>
+          </div>
+          <svg class="account-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+          <div class="account-dropdown">
+            <a href="{{ url_for('logout') }}" class="dropdown-item dropdown-logout">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+              Log out
+            </a>
+          </div>
+        </div>
+      </div>
+      {% endif %}
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  <script>
+    function toggleTheme() {
+      var root = document.documentElement;
+      var isDark = root.getAttribute('data-theme') === 'dark';
+      if (isDark) {
+        root.removeAttribute('data-theme');
+        localStorage.setItem('theme', 'light');
+      } else {
+        root.setAttribute('data-theme', 'dark');
+        localStorage.setItem('theme', 'dark');
+      }
+    }
+  </script>
+</body>
+</html>

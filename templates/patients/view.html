@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}{{ patient.first_name }} {{ patient.last_name }}{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div>
+    <h1>{{ patient.first_name }} {{ patient.last_name }}</h1>
+    <div class="subtitle">{{ patient.gender }} &middot; DOB: {{ patient.date_of_birth }} &middot; {{ patient.blood_group or 'N/A' }}</div>
+  </div>
+  <div class="actions-row">
+    <a href="{{ url_for('patients.edit_patient', patient_id=patient.patient_id) }}" class="btn btn-outline">Edit</a>
+    <form method="POST" action="{{ url_for('patients.delete_patient', patient_id=patient.patient_id) }}">
+      <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this patient record?')">Delete</button>
+    </form>
+  </div>
+</div>
+
+<div class="kpi-grid" style="margin-bottom:20px">
+  <div class="kpi-card">
+    <div class="kpi-label">Phone</div>
+    <div class="kpi-value" style="font-size:16px">{{ patient.phone or '—' }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Email</div>
+    <div class="kpi-value" style="font-size:16px">{{ patient.email or '—' }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Status</div>
+    <div class="kpi-value" style="font-size:16px">{{ patient.admission_status }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Ward</div>
+    <div class="kpi-value" style="font-size:16px">{{ patient.ward or '—' }}</div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:20px">
+  <h3 style="margin-bottom:8px">Address</h3>
+  <p>{{ patient.address or 'No address on file' }}</p>
+  <h3 style="margin:12px 0 8px">Emergency Contact</h3>
+  <p>{{ patient.emergency_contact or 'None provided' }}</p>
+</div>
+
+<h2 style="margin-bottom:12px">Appointments</h2>
+<div class="table-wrap" style="margin-bottom:24px">
+  <table>
+    <thead>
+      <tr><th>Date</th><th>Time</th><th>Doctor</th><th>Status</th></tr>
+    </thead>
+    <tbody>
+      {% for a in appointments %}
+      <tr>
+        <td>{{ a.appointment_date }}</td>
+        <td>{{ a.appointment_time }}</td>
+        <td>Dr. {{ a.doc_first }} {{ a.doc_last }}</td>
+        <td><span class="badge badge-teal">{{ a.status }}</span></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4" class="empty-state">No appointments yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h2 style="margin-bottom:12px">Bills</h2>
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>Bill ID</th><th>Date</th><th>Total</th><th>Status</th><th>Method</th></tr>
+    </thead>
+    <tbody>
+      {% for b in bills %}
+      <tr>
+        <td>#{{ b.bill_id }}</td>
+        <td>{{ b.bill_date }}</td>
+        <td>₹{{ b.total_amount }}</td>
+        <td>
+          {% if b.payment_status == 'Paid' %}<span class="badge badge-teal">{{ b.payment_status }}</span>
+          {% elif b.payment_status == 'Pending' %}<span class="badge badge-coral">{{ b.payment_status }}</span>
+          {% else %}<span class="badge badge-amber">{{ b.payment_status }}</span>{% endif %}
+        </td>
+        <td>{{ b.payment_method or '—' }}</td>
+      </tr>
+      {% else %}
+      <tr><td colspan="5" class="empty-state">No bills yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

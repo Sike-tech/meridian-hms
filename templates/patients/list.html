@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% from "_pagination.html" import pagination %}
+{% block title %}Meridian - Patients{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div>
+    <h1>Patients</h1>
+    <div class="subtitle">Manage patient records and registrations</div>
+  </div>
+  <a href="{{ url_for('patients.new_patient') }}" class="btn btn-primary">+ Register Patient</a>
+</div>
+
+<div class="kpi-grid" style="margin-bottom:20px">
+  <div class="kpi-card">
+    <div class="kpi-label">Total Patients</div>
+    <div class="kpi-value">{{ stats.total }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Outpatient</div>
+    <div class="kpi-value" style="color:var(--teal)">{{ stats.outpatient }}</div>
+  </div>
+  <div class="kpi-card accent-amber">
+    <div class="kpi-label">Admitted</div>
+    <div class="kpi-value">{{ stats.admitted }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Discharged</div>
+    <div class="kpi-value">{{ stats.discharged }}</div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:20px">
+  <form method="GET" class="filter-row">
+    <div class="filter-field">
+      <label for="q">Search</label>
+      <input type="text" id="q" name="q" placeholder="Search by name or phone..." value="{{ search }}">
+    </div>
+    <div class="filter-field">
+      <label for="status">Status</label>
+      <select id="status" name="status">
+        <option value="">All statuses</option>
+        <option {{ 'selected' if status=='Outpatient' }}>Outpatient</option>
+        <option {{ 'selected' if status=='Admitted' }}>Admitted</option>
+        <option {{ 'selected' if status=='Discharged' }}>Discharged</option>
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary btn-sm" style="align-self:flex-end">Filter</button>
+  </form>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead>
+      <tr><th>Name</th><th>DOB</th><th>Gender</th><th>Blood Group</th><th>Phone</th><th>Status</th><th>Ward</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for p in patients %}
+      <tr>
+        <td>
+          <a href="{{ url_for('patients.view_patient', patient_id=p.patient_id) }}">
+            {{ p.first_name }} {{ p.last_name }}
+          </a>
+        </td>
+        <td>{{ p.date_of_birth }}</td>
+        <td>{{ p.gender }}</td>
+        <td>{{ p.blood_group or '—' }}</td>
+        <td>{{ p.phone or '—' }}</td>
+        <td>
+          {% if p.admission_status == 'Admitted' %}<span class="badge badge-amber">{{ p.admission_status }}</span>
+          {% elif p.admission_status == 'Discharged' %}<span class="badge badge-gray">{{ p.admission_status }}</span>
+          {% else %}<span class="badge badge-teal">{{ p.admission_status }}</span>{% endif %}
+        </td>
+        <td>{{ p.ward or '—' }}</td>
+        <td>
+          <a href="{{ url_for('patients.edit_patient', patient_id=p.patient_id) }}" class="btn btn-sm btn-outline">Edit</a>
+          <form method="POST" action="{{ url_for('patients.delete_patient', patient_id=p.patient_id) }}" style="display:inline">
+            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this patient?')">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" class="empty-state">No patients found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{{ pagination(page, total_pages, total) }}
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block title %}Meridian{% endblock %}
+{% block content %}
+<div class="welcome-page">
+  <div class="welcome-hero">
+    <div class="heartbeat-container">
+      <svg class="heartbeat-svg" viewBox="0 0 600 120" preserveAspectRatio="none">
+        <polyline class="heartbeat-line" points="0,60 120,60 160,60 190,60 210,20 230,100 250,40 270,80 300,60 380,60 600,60"
+                  fill="none" stroke="#0F6B64" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <div class="welcome-content">
+      <div class="welcome-icon">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#0F6B64" stroke-width="1.5">
+          <path d="M12 21s-7.5-4.6-10-9.3C0.4 8.1 2 4.5 5.6 3.9 8 3.5 10 4.8 12 7.2c2-2.4 4-3.7 6.4-3.3 3.6 0.6 5.2 4.2 3.6 7.8C19.5 16.4 12 21 12 21z" fill="#E4F1EF" stroke="#0F6B64"/>
+        </svg>
+      </div>
+      <h1 class="welcome-title">Welcome to Meridian</h1>
+      <p class="welcome-subtitle">Hospital Management System</p>
+      <p class="welcome-tagline">Caring for health, empowering care.</p>
+
+      <div class="welcome-features">
+        <a class="welcome-feature" href="{{ url_for('patients.list_patients') }}">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0F6B64" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 20c1.5-4 4-6 7.5-6s6 2 7.5 6"/></svg>
+          <span>Patient Records</span>
+        </a>
+        <a class="welcome-feature" href="{{ url_for('doctors.list_doctors') }}">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E8A33D" stroke-width="2"><path d="M9 3v4a3 3 0 0 0 6 0V3"/><path d="M12 13v4"/><circle cx="12" cy="19" r="2"/><path d="M6 8c0 5 2.5 7 6 7s6-2 6-7"/></svg>
+          <span>Doctor Management</span>
+        </a>
+        <a class="welcome-feature" href="{{ url_for('appointments.list_appointments') }}">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E1604F" stroke-width="2"><rect x="3.5" y="5" width="17" height="16" rx="2"/><path d="M3.5 9.5h17"/><path d="M8 3v4M16 3v4"/></svg>
+          <span>Appointments</span>
+        </a>
+        <a class="welcome-feature" href="{{ url_for('billing.list_bills') }}">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0F6B64" stroke-width="2"><rect x="4" y="3.5" width="16" height="17" rx="1.5"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>
+          <span>Billing &amp; Reports</span>
+        </a>
+        <a class="welcome-feature" href="{{ url_for('analytics.dashboard') }}">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E8A33D" stroke-width="2"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+          <span>Analytics</span>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="welcome-footer">
+    <div class="pulse-dot"></div>
+    <span>System Online</span>
+  </div>
+</div>
+{% endblock %}

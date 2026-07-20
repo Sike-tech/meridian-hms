@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Edit' if doctor else 'Add' }} Doctor{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div>
+    <h1>{{ 'Edit' if doctor else 'Add New' }} Doctor</h1>
+  </div>
+</div>
+
+<div class="card">
+  <form method="POST">
+    <div class="form-grid">
+      <div>
+        <label for="first_name">First Name</label>
+        <input type="text" name="first_name" id="first_name"
+               value="{{ doctor.first_name if doctor else '' }}" required>
+      </div>
+      <div>
+        <label for="last_name">Last Name</label>
+        <input type="text" name="last_name" id="last_name"
+               value="{{ doctor.last_name if doctor else '' }}" required>
+      </div>
+      <div>
+        <label for="specialization">Specialization</label>
+        <input type="text" name="specialization" id="specialization"
+               value="{{ doctor.specialization if doctor else '' }}" required>
+      </div>
+      <div>
+        <label for="department">Department</label>
+        <input type="text" name="department" id="department"
+               value="{{ doctor.department if doctor else '' }}" required>
+      </div>
+      <div>
+        <label for="phone">Phone</label>
+        <input type="text" name="phone" id="phone"
+               value="{{ doctor.phone if doctor else '' }}">
+      </div>
+      <div>
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email"
+               value="{{ doctor.email if doctor else '' }}">
+      </div>
+      <div>
+        <label for="status">Status</label>
+        <select name="status" id="status">
+          <option value="Active" {{ 'selected' if doctor and doctor.status == 'Active' }}>Active</option>
+          <option value="On Leave" {{ 'selected' if doctor and doctor.status == 'On Leave' }}>On Leave</option>
+          <option value="Inactive" {{ 'selected' if doctor and doctor.status == 'Inactive' }}>Inactive</option>
+        </select>
+      </div>
+    </div>
+    <div class="actions-row" style="margin-top:20px">
+      <button type="submit" class="btn btn-primary">{{ 'Update' if doctor else 'Add' }} Doctor</button>
+      <a href="{{ url_for('doctors.list_doctors') }}" class="btn btn-outline">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

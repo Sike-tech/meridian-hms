@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% from "_pagination.html" import pagination %}
+{% block title %}Meridian - Appointments{% endblock %}
+{% block content %}
+<div class="topbar">
+  <div>
+    <h1>Appointments</h1>
+    <div class="subtitle">Schedule, manage and track patient appointments</div>
+  </div>
+  <a href="{{ url_for('appointments.new_appointment') }}" class="btn btn-primary">+ New Appointment</a>
+</div>
+
+<div class="kpi-grid" style="margin-bottom:20px">
+  <div class="kpi-card">
+    <div class="kpi-label">Total Appointments</div>
+    <div class="kpi-value">{{ stats.total }}</div>
+  </div>
+  <div class="kpi-card accent-amber">
+    <div class="kpi-label">Today</div>
+    <div class="kpi-value">{{ stats.today }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Scheduled</div>
+    <div class="kpi-value" style="color:var(--teal)">{{ stats.scheduled }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Completed</div>
+    <div class="kpi-value">{{ stats.completed }}</div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:20px">
+  <form method="GET">
+    <div class="filter-row">
+      <div class="filter-field">
+        <label for="patient">Search Patient</label>
+        <input type="text" id="patient" name="patient" placeholder="Patient name..." value="{{ patient }}">
+      </div>
+      <div class="filter-field">
+        <label for="doctor">Search Doctor</label>
+        <input type="text" id="doctor" name="doctor" placeholder="Doctor name..." value="{{ doctor }}">
+      </div>
+    </div>
+    <div class="filter-row" style="margin-top:14px">
+      <div class="filter-field">
+        <label for="date">Date</label>
+        <input type="date" id="date" name="date" value="{{ date_filter }}">
+      </div>
+      <div class="filter-field">
+        <label for="status">Status</label>
+        <select id="status" name="status">
+          <option value="">All statuses</option>
+          <option {{ 'selected' if status=='Scheduled' }}>Scheduled</option>
+          <option {{ 'selected' if status=='Completed' }}>Completed</option>
+          <option {{ 'selected' if status=='Cancelled' }}>Cancelled</option>
+          <option {{ 'selected' if status=='No-Show' }}>No-Show</option>
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary btn-sm" style="align-self:flex-end">Filter</button>
+    </div>
+  </form>
+</div>
+
+<div class="table-wrap">
+  <table class="compact-table">
+    <thead>
+      <tr><th>Date</th><th>Time</th><th>Patient</th><th>Doctor</th><th>Specialization</th><th>Reason</th><th>Status</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+      {% for a in appointments %}
+      <tr>
+        <td>{{ a.appointment_date }}</td>
+        <td>{{ a.appointment_time }}</td>
+        <td>{{ a.p_first }} {{ a.p_last }}</td>
+        <td>Dr. {{ a.d_first }} {{ a.d_last }}</td>
+        <td>{{ a.specialization }}</td>
+        <td>{{ a.reason or '—' }}</td>
+        <td>
+          {% if a.status == 'Scheduled' %}<span class="badge badge-teal">{{ a.status }}</span>
+          {% elif a.status == 'Completed' %}<span class="badge badge-gray">{{ a.status }}</span>
+          {% elif a.status == 'Cancelled' %}<span class="badge badge-coral">{{ a.status }}</span>
+          {% else %}<span class="badge badge-amber">{{ a.status }}</span>{% endif %}
+        </td>
+        <td>
+          {% if a.status == 'Scheduled' %}
+          <form method="POST" action="{{ url_for('appointments.update_status', appointment_id=a.appointment_id) }}" style="display:inline">
+            <input type="hidden" name="status" value="Completed">
+            <button type="submit" class="btn btn-sm btn-primary">Complete</button>
+          </form>
+          <form method="POST" action="{{ url_for('appointments.update_status', appointment_id=a.appointment_id) }}" style="display:inline">
+            <input type="hidden" name="status" value="Cancelled">
+            <button type="submit" class="btn btn-sm btn-danger">Cancel</button>
+          </form>
+          {% endif %}
+          <form method="POST" action="{{ url_for('appointments.delete_appointment', appointment_id=a.appointment_id) }}" style="display:inline">
+            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Delete this appointment?')">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="8" class="empty-state">No appointments found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{{ pagination(page, total_pages, total) }}
+{% endblock %}
