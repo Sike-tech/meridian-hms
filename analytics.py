@@ -1,7 +1,7 @@
 """
-analytics.py — Hospital Management System Analytics Dashboard
+CBSE Class 12 Project
 
-Demonstrates CBSE Class 12 Informatics Practices concepts:
+analytics.py — Hospital Management System Analytics Dashboard
 
 PANDAS: Series, DataFrame, head(), tail(), describe(), shape,
         groupby(), sort_values(), value_counts(), to_csv(), read_csv()
@@ -59,14 +59,24 @@ def _save(filename):
 
 # ══════════════════════════════════════════════════════════════════
 #  SECTION 1: PANDAS — Series Operations
-#  CBSE Concept: Series creation, head(), tail(), mathematical ops
+#  Concept: Series creation, head(), tail(), mathematical ops
 # ══════════════════════════════════════════════════════════════════
 
 print("=" * 60)
 print("SECTION 1: PANDAS — Series Operations")
 print("=" * 60)
 
-doctors_data = query("SELECT first_name, last_name, consultation_fee FROM doctors")
+
+def _safe_query(sql, params=None, one=False):
+    """Wrapper so a boot-time DB outage doesn't crash app import."""
+    try:
+        return query(sql, params, one)
+    except Exception as _e:
+        print(f"[analytics] DB unavailable at import: {_e}")
+        return None if one else []
+
+
+doctors_data = _safe_query("SELECT first_name, last_name, consultation_fee FROM doctors")
 
 # Series creation from dictionary
 fee_dict = {}
@@ -91,7 +101,7 @@ print(f"Std:    ₹{fee_series.std():.2f}")
 
 # ══════════════════════════════════════════════════════════════════
 #  SECTION 2: PANDAS — DataFrame Operations
-#  CBSE Concept: DataFrame from SQL, head(), tail(), describe(),
+#  Concept: DataFrame from SQL, head(), tail(), describe(),
 #                shape, value_counts(), groupby(), sort_values(),
 #                boolean filtering
 # ══════════════════════════════════════════════════════════════════
@@ -102,21 +112,21 @@ print("=" * 60)
 
 # DataFrame creation from SQL query (list of dicts)
 patients_df = pd.DataFrame(
-    query("SELECT patient_id, first_name, last_name, gender, blood_group, "
-          "admission_status, ward FROM patients")
+    _safe_query("SELECT patient_id, first_name, last_name, gender, blood_group, "
+                "admission_status, ward FROM patients")
 )
 doctors_df = pd.DataFrame(
-    query("SELECT doctor_id, first_name, last_name, specialization, "
-          "department, consultation_fee, status FROM doctors")
+    _safe_query("SELECT doctor_id, first_name, last_name, specialization, "
+                "department, consultation_fee, status FROM doctors")
 )
 appointments_df = pd.DataFrame(
-    query("SELECT appointment_id, appointment_date, appointment_time, "
-          "status, patient_id, doctor_id FROM appointments")
+    _safe_query("SELECT appointment_id, appointment_date, appointment_time, "
+                "status, patient_id, doctor_id FROM appointments")
 )
 bills_df = pd.DataFrame(
-    query("SELECT bill_id, patient_id, bill_date, consultation_fee, "
-          "medicine_charges, room_charges, other_charges, total_amount, "
-          "payment_status, payment_method FROM bills")
+    _safe_query("SELECT bill_id, patient_id, bill_date, consultation_fee, "
+                "medicine_charges, room_charges, other_charges, total_amount, "
+                "payment_status, payment_method FROM bills")
 )
 
 # Convert decimal columns to float
@@ -125,37 +135,40 @@ for col in ["consultation_fee", "medicine_charges", "room_charges",
     if col in bills_df.columns:
         bills_df[col] = pd.to_numeric(bills_df[col], errors="coerce").fillna(0.0)
 
-# head(), shape
-print("\nPatients DataFrame head(3):")
-print(patients_df.head(3))
-print(f"\nShape: {patients_df.shape}  (rows, columns)")
+try:
+    # head(), shape
+    print("\nPatients DataFrame head(3):")
+    print(patients_df.head(3))
+    print(f"\nShape: {patients_df.shape}  (rows, columns)")
 
-# describe()
-print("\nBills DataFrame describe():")
-print(bills_df[["consultation_fee", "total_amount"]].describe().round(2))
+    # describe()
+    print("\nBills DataFrame describe():")
+    print(bills_df[["consultation_fee", "total_amount"]].describe().round(2))
 
-# value_counts()
-print("\nPayment Status value_counts():")
-print(bills_df["payment_status"].value_counts())
+    # value_counts()
+    print("\nPayment Status value_counts():")
+    print(bills_df["payment_status"].value_counts())
 
-# groupby() with aggregate
-print("\nBills groupby('payment_status').sum() (total_amount):")
-print(bills_df.groupby("payment_status")["total_amount"].sum().round(2))
+    # groupby() with aggregate
+    print("\nBills groupby('payment_status').sum() (total_amount):")
+    print(bills_df.groupby("payment_status")["total_amount"].sum().round(2))
 
-# sort_values()
-print("\nDoctors sorted by consultation_fee (descending):")
-print(doctors_df[["first_name", "last_name", "consultation_fee"]]
-      .sort_values("consultation_fee", ascending=False).head(5))
+    # sort_values()
+    print("\nDoctors sorted by consultation_fee (descending):")
+    print(doctors_df[["first_name", "last_name", "consultation_fee"]]
+          .sort_values("consultation_fee", ascending=False).head(5))
 
-# Boolean indexing (filtering)
-print("\nPatients with admission_status == 'Admitted':")
-print(patients_df[patients_df["admission_status"] == "Admitted"]
-      [["first_name", "last_name", "ward"]])
+    # Boolean indexing (filtering)
+    print("\nPatients with admission_status == 'Admitted':")
+    print(patients_df[patients_df["admission_status"] == "Admitted"]
+          [["first_name", "last_name", "ward"]])
+except Exception as _e:
+    print(f"[analytics] summary prints skipped: {_e}")
 
 
 # ══════════════════════════════════════════════════════════════════
 #  SECTION 3: MATPLOTLIB — Graphs (one by one)
-#  CBSE Concept: Line, Bar, Histogram, Pie, Scatter
+#  Concept: Line, Bar, Histogram, Pie, Scatter
 # ══════════════════════════════════════════════════════════════════
 
 print("\n" + "=" * 60)
@@ -164,7 +177,7 @@ print("=" * 60)
 
 
 # ── Graph 1: Line Plot ───────────────────────────────────────────
-# CBSE: plt.plot() — shows trend over time
+# plt.plot() — shows trend over time
 def build_appointments_trend():
     print("\n[1/9] Line Plot — plt.plot() — Appointments Trend")
 
@@ -197,7 +210,7 @@ def build_appointments_trend():
 
 
 # ── Graph 2: Bar Graph ───────────────────────────────────────────
-# CBSE: plt.bar() — compares categories
+# plt.bar() — compares categories
 def build_department_load():
     print("[2/9] Bar Graph — plt.bar() — Department Workload")
 
@@ -227,7 +240,7 @@ def build_department_load():
 
 
 # ── Graph 3: Bar Graph ───────────────────────────────────────────
-# CBSE: plt.bar() — revenue per month
+# plt.bar() — revenue per month
 def build_revenue_by_month():
     print("[3/9] Bar Graph — plt.bar() — Revenue by Month")
 
@@ -256,7 +269,7 @@ def build_revenue_by_month():
 
 
 # ── Graph 4: Pie Chart ───────────────────────────────────────────
-# CBSE: plt.pie() — shows percentage distribution
+# plt.pie() — shows percentage distribution
 def build_payment_status():
     print("[4/9] Pie Chart — plt.pie() — Payment Status")
 
@@ -288,7 +301,7 @@ def build_payment_status():
 
 
 # ── Graph 5: Horizontal Bar ──────────────────────────────────────
-# CBSE: plt.barh() — horizontal comparison
+# plt.barh() — horizontal comparison
 def build_patient_admission_mix():
     print("[5/9] Horizontal Bar — plt.barh() — Patient Admission")
 
@@ -315,7 +328,7 @@ def build_patient_admission_mix():
 
 
 # ── Graph 6: Histogram ───────────────────────────────────────────
-# CBSE: plt.hist() — shows frequency distribution
+# plt.hist() — shows frequency distribution
 def build_bill_amount_histogram():
     print("[6/9] Histogram — plt.hist() — Bill Amount Distribution")
 
@@ -341,7 +354,7 @@ def build_bill_amount_histogram():
 
 
 # ── Graph 7: Scatter Plot ────────────────────────────────────────
-# CBSE: plt.scatter() — shows relationship between two variables
+# plt.scatter() — shows relationship between two variables
 def build_fee_vs_total_scatter():
     print("[7/9] Scatter Plot — plt.scatter() — Fee vs Total Bill")
 
@@ -375,7 +388,7 @@ def build_fee_vs_total_scatter():
 
 
 # ── Graph 8: Pie Chart ───────────────────────────────────────────
-# CBSE: plt.pie() — gender distribution
+# plt.pie() — gender distribution
 def build_gender_pie():
     print("[8/9] Pie Chart — plt.pie() — Gender Distribution")
 
@@ -407,7 +420,7 @@ def build_gender_pie():
 
 
 # ── Graph 9: Bar Graph ───────────────────────────────────────────
-# CBSE: plt.bar() — weekday pattern
+# plt.bar() — weekday pattern
 def build_weekday_appointments():
     print("[9/9] Bar Graph — plt.bar() — Weekday Appointments")
 
@@ -438,7 +451,7 @@ def build_weekday_appointments():
 
 # ══════════════════════════════════════════════════════════════════
 #  SECTION 4: CSV Import / Export
-#  CBSE Concept: to_csv() to save, read_csv() to load back
+#  Concept: to_csv() to save, read_csv() to load back
 # ══════════════════════════════════════════════════════════════════
 
 def export_csv_files():
@@ -446,14 +459,14 @@ def export_csv_files():
     print("SECTION 4: CSV Import / Export")
     print("=" * 60)
 
-    # CBSE: to_csv() — export DataFrame to CSV
+    # to_csv() — export DataFrame to CSV
     patients_df.to_csv(CSV_DIR + "/patients.csv", index=False)
     doctors_df.to_csv(CSV_DIR + "/doctors.csv", index=False)
     appointments_df.to_csv(CSV_DIR + "/appointments.csv", index=False)
     bills_df.to_csv(CSV_DIR + "/bills.csv", index=False)
     print("\nExported 4 CSV files to static/csv/")
 
-    # CBSE: read_csv() — import CSV back into DataFrame
+    # read_csv() — import CSV back into DataFrame
     patients_verify = pd.read_csv(CSV_DIR + "/patients.csv")
     print(f"Re-read patients.csv — {len(patients_verify)} rows loaded")
     print(patients_verify.head(3))
@@ -469,22 +482,26 @@ def export_csv_files():
 #  SECTION 5: KPI Computation + Main Route
 # ══════════════════════════════════════════════════════════════════
 
-def compute_kpis():
-    total_patients = len(patients_df)
-    admitted = int((patients_df["admission_status"] == "Admitted").sum()) if not patients_df.empty else 0
+def compute_kpis(p_df=None, a_df=None, b_df=None):
+    p = p_df if p_df is not None else patients_df
+    a = a_df if a_df is not None else appointments_df
+    b = b_df if b_df is not None else bills_df
+
+    total_patients = len(p)
+    admitted = int((p["admission_status"] == "Admitted").sum()) if not p.empty else 0
 
     today = pd.Timestamp.now().strftime("%Y-%m-%d")
-    todays_appts = len(appointments_df[appointments_df["appointment_date"] == today]) if not appointments_df.empty else 0
+    todays_appts = len(a[a["appointment_date"] == today]) if not a.empty else 0
 
     current_month = pd.Timestamp.now().strftime("%Y-%m")
-    bills_copy = bills_df.copy()
-    if not bills_copy.empty and "bill_date" in bills_copy.columns:
-        bills_copy["bill_date"] = pd.to_datetime(bills_copy["bill_date"])
-        bills_copy["month"] = bills_copy["bill_date"].dt.to_period("M").astype(str)
-        month_bills = bills_copy[bills_copy["month"] == current_month]
+    b = b.copy()
+    if not b.empty and "bill_date" in b.columns:
+        b["bill_date"] = pd.to_datetime(b["bill_date"])
+        b["month"] = b["bill_date"].dt.to_period("M").astype(str)
+        month_bills = b[b["month"] == current_month]
         month_revenue = float(month_bills["total_amount"].astype(float).sum()) if not month_bills.empty else 0.0
         pending_dues = float(
-            bills_copy.loc[bills_copy["payment_status"] != "Paid", "total_amount"].astype(float).sum()
+            b.loc[b["payment_status"] != "Paid", "total_amount"].astype(float).sum()
         )
     else:
         month_revenue = 0.0
@@ -556,14 +573,17 @@ def dashboard():
 #  Generate all charts and CSV files (runs in both IDLE and Flask)
 # ══════════════════════════════════════════════════════════════════
 
-build_appointments_trend()
-build_department_load()
-build_revenue_by_month()
-build_payment_status()
-build_patient_admission_mix()
-build_bill_amount_histogram()
-build_fee_vs_total_scatter()
-build_gender_pie()
-build_weekday_appointments()
-export_csv_files()
+try:
+    build_appointments_trend()
+    build_department_load()
+    build_revenue_by_month()
+    build_payment_status()
+    build_patient_admission_mix()
+    build_bill_amount_histogram()
+    build_fee_vs_total_scatter()
+    build_gender_pie()
+    build_weekday_appointments()
+    export_csv_files()
+except Exception as _e:
+    print(f"[analytics] chart/CSV generation skipped at startup: {_e}")
 print("\nAll 9 charts + 4 CSV files generated successfully.")
