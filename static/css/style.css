@@ -477,6 +477,11 @@ select::-ms-expand { display: none; }
 [data-theme="dark"] .badge-amber { background: #3A2E16; color: #E8C07A; }
 [data-theme="dark"] .badge-coral { background: #3A2220; color: #E8A79D; }
 
+/* Dark mode: card titles use var(--deep-teal) inline (near-black on dark),
+   so force them to the bright --teal to stay readable. */
+[data-theme="dark"] .card h3,
+[data-theme="dark"] .chart-card h3 { color: var(--teal) !important; }
+
 input:focus, select:focus, textarea:focus {
   outline: 2px solid var(--teal);
   outline-offset: 1px;
