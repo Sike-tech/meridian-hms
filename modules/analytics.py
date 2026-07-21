@@ -410,10 +410,16 @@ def build_bill_amount_histogram():
                                     edgecolor="white", alpha=0.85)
         for i, patch in enumerate(patches):
             patch.set_facecolor(CHART_COLORS[i % len(CHART_COLORS)])
+        # Build legend showing each bin's range
+        bin_labels = []
+        for i in range(len(bins) - 1):
+            lo = int(bins[i])
+            hi = int(bins[i + 1])
+            bin_labels.append(f"₹{lo:,}–₹{hi:,}")
+        ax.legend(patches, bin_labels, loc="upper center",
+                  bbox_to_anchor=(0.5, -0.22), ncol=2, fontsize=7.5, framealpha=0.9)
         ax.set_xlabel("Total Bill Amount (₹)", fontsize=10)
         ax.set_ylabel("Frequency", fontsize=10)
-        ax.legend([patches[0]], ["Bill Amounts"], loc="upper center",
-                  bbox_to_anchor=(0.5, -0.18), fontsize=9, framealpha=0.9)
     else:
         ax.text(0.5, 0.5, "No billing data yet",
                 ha="center", va="center", color=SLATE)
