@@ -374,7 +374,7 @@ def build_patient_admission_mix():
 
     status_counts = patients_df["admission_status"].value_counts()
 
-    fig, ax = plt.subplots(figsize=(6, 3.5))
+    fig, ax = plt.subplots(figsize=(6, 4.2))
 
     if not status_counts.empty:
         colors = [TEAL, AMBER, CORAL][:len(status_counts)]
@@ -382,6 +382,8 @@ def build_patient_admission_mix():
         ax.bar_label(bars, padding=3, fontsize=10, fontweight="bold")
         ax.set_xlabel("Number of Patients", fontsize=10)
         ax.set_ylabel("")
+        ax.legend(bars, status_counts.index, loc="upper center",
+                  bbox_to_anchor=(0.5, -0.18), ncol=3, fontsize=9, framealpha=0.9)
     else:
         ax.text(0.5, 0.5, "No patient data yet",
                 ha="center", va="center", color=SLATE)
@@ -390,7 +392,7 @@ def build_patient_admission_mix():
                  fontweight="bold", loc="left")
     ax.grid(axis="x", color=GRID, linewidth=0.8)
     ax.spines[["top", "right"]].set_visible(False)
-    fig.tight_layout()
+    fig.subplots_adjust(bottom=0.25)
     _save("patient_admission_mix.png", dark=True)
     plt.close()
 
@@ -400,7 +402,7 @@ def build_patient_admission_mix():
 def build_bill_amount_histogram():
     print("[6/9] Histogram — plt.hist() — Bill Amount Distribution")
 
-    fig, ax = plt.subplots(figsize=(7, 3.8))
+    fig, ax = plt.subplots(figsize=(7, 4.2))
 
     if not bills_df.empty and bills_df["total_amount"].notna().any():
         amounts = bills_df["total_amount"].dropna().astype(float)
@@ -410,6 +412,8 @@ def build_bill_amount_histogram():
             patch.set_facecolor(CHART_COLORS[i % len(CHART_COLORS)])
         ax.set_xlabel("Total Bill Amount (₹)", fontsize=10)
         ax.set_ylabel("Frequency", fontsize=10)
+        ax.legend([patches[0]], ["Bill Amounts"], loc="upper center",
+                  bbox_to_anchor=(0.5, -0.18), fontsize=9, framealpha=0.9)
     else:
         ax.text(0.5, 0.5, "No billing data yet",
                 ha="center", va="center", color=SLATE)
@@ -418,7 +422,7 @@ def build_bill_amount_histogram():
                  fontweight="bold", loc="left")
     ax.grid(axis="y", color=GRID, linewidth=0.8)
     ax.spines[["top", "right"]].set_visible(False)
-    fig.tight_layout()
+    fig.subplots_adjust(bottom=0.25)
     _save("bill_histogram.png", dark=True)
     plt.close()
 
