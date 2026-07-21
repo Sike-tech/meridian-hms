@@ -13,9 +13,9 @@ def list_patients():
     sql = "SELECT * FROM patients WHERE 1=1"
     params = []
     if search:
-        sql += " AND (first_name LIKE %s OR last_name LIKE %s OR phone LIKE %s)"
+        sql += " AND (CONCAT(first_name, ' ', last_name) LIKE %s OR phone LIKE %s)"
         like = f"%{search}%"
-        params += [like, like, like]
+        params += [like, like]
     if status:
         sql += " AND admission_status = %s"
         params.append(status)

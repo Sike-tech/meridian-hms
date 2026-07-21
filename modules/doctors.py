@@ -16,9 +16,9 @@ def list_doctors():
     if search:
         sql += """
             AND (
-                first_name LIKE %s
-                OR last_name LIKE %s
+                CONCAT(first_name, ' ', last_name) LIKE %s
                 OR specialization LIKE %s
+                OR department LIKE %s
             )
         """
         like = f"%{search}%"
@@ -53,6 +53,13 @@ def list_doctors():
         "ORDER BY specialization"
     )
 
+    kpis = {
+        "total": total,
+        "active": query("SELECT COUNT(*) AS cnt FROM doctors WHERE status = 'Active'", one=True)["cnt"],
+        "on_leave": query("SELECT COUNT(*) AS cnt FROM doctors WHERE status = 'On Leave'", one=True)["cnt"],
+        "departments": query("SELECT COUNT(DISTINCT department) AS cnt FROM doctors", one=True)["cnt"],
+    }
+
     return render_template(
         "doctors/list.html",
         doctors=doctors,
@@ -63,6 +70,7 @@ def list_doctors():
         page=page,
         total_pages=total_pages,
         total=total,
+        kpis=kpis,
     )
 
 

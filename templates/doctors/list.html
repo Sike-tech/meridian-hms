@@ -16,6 +16,26 @@
 
 </div>
 
+<!-- ── KPI Cards ── -->
+<div class="kpi-grid">
+  <div class="kpi-card">
+    <div class="kpi-label">Total Doctors</div>
+    <div class="kpi-value mono">{{ kpis.total }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Active</div>
+    <div class="kpi-value mono">{{ kpis.active }}</div>
+  </div>
+  <div class="kpi-card accent-coral">
+    <div class="kpi-label">On Leave</div>
+    <div class="kpi-value mono">{{ kpis.on_leave }}</div>
+  </div>
+  <div class="kpi-card">
+    <div class="kpi-label">Departments</div>
+    <div class="kpi-value mono">{{ kpis.departments }}</div>
+  </div>
+</div>
+
 <div class="card" style="margin-bottom:20px">
 
     <form method="GET">
