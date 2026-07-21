@@ -34,8 +34,8 @@
       </div>
       <div>
         <label for="appointment_date">Date</label>
-        <input type="date" name="appointment_date" id="appointment_date"
-               value="{{ appointment.appointment_date if appointment else '' }}" required>
+        <input type="text" name="appointment_date" class="datepicker"
+               value="{{ appointment.appointment_date if appointment else '' }}" placeholder="dd/mm/yyyy" required>
       </div>
       <div>
         <label for="appointment_time">Time</label>

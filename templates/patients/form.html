@@ -22,8 +22,8 @@
       </div>
       <div>
         <label for="date_of_birth">Date of Birth</label>
-        <input type="date" name="date_of_birth" id="date_of_birth"
-               value="{{ patient.date_of_birth if patient else '' }}" required>
+        <input type="text" name="date_of_birth" class="datepicker"
+               value="{{ patient.date_of_birth if patient else '' }}" placeholder="dd/mm/yyyy" required>
       </div>
       <div>
         <label for="gender">Gender</label>
