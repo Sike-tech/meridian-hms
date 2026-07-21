@@ -82,6 +82,8 @@ def _style_dark():
             txt.set_color("#CFE0DC")
         leg = ax.get_legend()
         if leg:
+            leg.get_frame().set_facecolor("#0E1B1A")
+            leg.get_frame().set_edgecolor("#3A554F")
             for text in leg.get_texts():
                 text.set_color("#CFE0DC")
         for child in ax.get_children():
