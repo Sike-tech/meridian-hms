@@ -276,7 +276,7 @@ def build_department_load():
     dept_counts = merged.groupby("department").size().reset_index(name="total")
     dept_counts = dept_counts.sort_values("total", ascending=False)
 
-    fig, ax = plt.subplots(figsize=(8, 3.8))
+    fig, ax = plt.subplots(figsize=(8, 4.2))
 
     if not dept_counts.empty:
         bars = ax.bar(dept_counts["department"], dept_counts["total"],
@@ -284,6 +284,8 @@ def build_department_load():
         ax.bar_label(bars, padding=3, fontsize=9)
         ax.set_xlabel("Department", fontsize=10)
         ax.set_ylabel("Number of Appointments", fontsize=10)
+        ax.legend(bars, dept_counts["department"], loc="upper center",
+                  bbox_to_anchor=(0.5, -0.25), ncol=4, fontsize=8, framealpha=0.9)
     else:
         ax.text(0.5, 0.5, "No department data yet",
                 ha="center", va="center", color=SLATE)
@@ -294,7 +296,7 @@ def build_department_load():
     ax.spines[["top", "right"]].set_visible(False)
     ax.set_xticks(range(len(dept_counts)))
     ax.set_xticklabels(dept_counts["department"], rotation=40, ha="right", fontsize=8)
-    fig.tight_layout()
+    fig.subplots_adjust(bottom=0.35)
     _save("department_load.png", dark=True)
     plt.close()
 
@@ -380,7 +382,6 @@ def build_patient_admission_mix():
         ax.bar_label(bars, padding=3, fontsize=10, fontweight="bold")
         ax.set_xlabel("Number of Patients", fontsize=10)
         ax.set_ylabel("")
-        ax.legend(bars, status_counts.index, loc="lower right", fontsize=9, framealpha=0.9)
     else:
         ax.text(0.5, 0.5, "No patient data yet",
                 ha="center", va="center", color=SLATE)
