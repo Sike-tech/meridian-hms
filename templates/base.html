@@ -7,6 +7,43 @@
   <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/Meridian_logo-circular.png') }}">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    select.flatpickr-monthDropdown-months {
+      background-color: #0F6B64 !important;
+      color: #fff !important;
+      border: none !important;
+      border-radius: 10px !important;
+      padding: 5px 26px 5px 10px !important;
+      font-weight: 600 !important;
+      font-size: 13px !important;
+      -webkit-appearance: none !important;
+      -moz-appearance: none !important;
+      appearance: none !important;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") !important;
+      background-repeat: no-repeat !important;
+      background-position: right 8px center !important;
+    }
+    [data-theme="dark"] select.flatpickr-monthDropdown-months {
+      background-color: #0A2D2A !important;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23CFE0DC' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") !important;
+    }
+    select.flatpickr-monthDropdown-months option {
+      background: #fff !important;
+      color: #1E293B !important;
+    }
+    [data-theme="dark"] select.flatpickr-monthDropdown-months option {
+      background: #16302D !important;
+      color: #CFE0DC !important;
+    }
+    .flatpickr-day.prevMonthDay,
+    .flatpickr-day.nextMonthDay {
+      color: #A8B8B4 !important;
+    }
+    [data-theme="dark"] .flatpickr-day.prevMonthDay,
+    [data-theme="dark"] .flatpickr-day.nextMonthDay {
+      color: #506662 !important;
+    }
+  </style>
   <script>
     (function () {
       var t = localStorage.getItem('theme');
@@ -108,12 +145,27 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      flatpickr('.datepicker', {
+      var pickers = flatpickr('.datepicker', {
         dateFormat: 'Y-m-d',
-        altInput: true,
-        altFormat: 'd/m/Y',
+        clickOpens: false,
         animate: true,
         allowInput: true
+      });
+      flatpickr('.timepicker', {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: 'H:i',
+        time_24hr: true,
+        clickOpens: false,
+        animate: true,
+        allowInput: true
+      });
+      // Open calendar when the button next to the input is clicked
+      document.querySelectorAll('.datepicker-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var input = this.parentElement.querySelector('.datepicker, .timepicker');
+          if (input && input._flatpickr) input._flatpickr.open();
+        });
       });
     });
   </script>
