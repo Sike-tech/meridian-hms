@@ -240,27 +240,29 @@ def build_appointments_trend():
     appt_by_date = appt_by_date.reset_index(name="count")
     appt_by_date = appt_by_date.sort_values("appointment_date")
 
-    plt.figure(figsize=(7, 3.2))
+    fig, ax = plt.subplots(figsize=(8, 3.8))
 
     if not appt_by_date.empty:
         dates = pd.to_datetime(appt_by_date["appointment_date"])
         counts = appt_by_date["count"]
-        plt.plot(dates, counts, color=TEAL, linewidth=2.5,
-                 marker="o", markersize=5, label="Daily Appointments")
-        plt.fill_between(dates, counts, color=TEAL, alpha=0.08)
-        plt.gca().xaxis.set_major_formatter(mdates.DateFormatter("%b %d"))
-        plt.xticks(rotation=30)
-        plt.xlabel("Date", fontsize=10)
-        plt.ylabel("Number of Appointments", fontsize=10)
-        plt.legend(loc="upper left", fontsize=9)
+        ax.plot(dates, counts, color=TEAL, linewidth=2.5,
+                marker="o", markersize=5, label="Daily Appointments")
+        ax.fill_between(dates, counts, color=TEAL, alpha=0.08)
+        ax.xaxis.set_major_formatter(mdates.DateFormatter("%b %d"))
+        ax.set_xticks(dates)
+        ax.set_xticklabels([d.strftime("%b %d") for d in dates], rotation=40, ha="right", fontsize=8)
+        ax.set_xlabel("Date", fontsize=10)
+        ax.set_ylabel("Number of Appointments", fontsize=10)
+        ax.legend(loc="upper left", fontsize=9, framealpha=0.9)
     else:
-        plt.text(0.5, 0.5, "No appointment data yet",
-                 ha="center", va="center", color=SLATE)
+        ax.text(0.5, 0.5, "No appointment data yet",
+                ha="center", va="center", color=SLATE)
 
-    plt.title("Appointments — Last 30 Days", fontsize=12,
-              fontweight="bold", loc="left")
-    plt.grid(axis="y", color=GRID, linewidth=0.8)
-    plt.gca().spines[["top", "right"]].set_visible(False)
+    ax.set_title("Appointments — Last 30 Days", fontsize=12,
+                 fontweight="bold", loc="left")
+    ax.grid(axis="y", color=GRID, linewidth=0.8)
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout()
     _save("appointments_trend.png", dark=True)
     plt.close()
 
@@ -274,24 +276,25 @@ def build_department_load():
     dept_counts = merged.groupby("department").size().reset_index(name="total")
     dept_counts = dept_counts.sort_values("total", ascending=False)
 
-    plt.figure(figsize=(7, 3.2))
+    fig, ax = plt.subplots(figsize=(8, 3.8))
 
     if not dept_counts.empty:
-        bars = plt.bar(dept_counts["department"], dept_counts["total"],
-                       color=CHART_COLORS[:len(dept_counts)])
-        plt.bar_label(bars, padding=3, fontsize=9)
-        plt.xlabel("Department", fontsize=10)
-        plt.ylabel("Number of Appointments", fontsize=10)
-        plt.legend(bars, dept_counts["department"], loc="upper right", fontsize=8)
+        bars = ax.bar(dept_counts["department"], dept_counts["total"],
+                      color=CHART_COLORS[:len(dept_counts)])
+        ax.bar_label(bars, padding=3, fontsize=9)
+        ax.set_xlabel("Department", fontsize=10)
+        ax.set_ylabel("Number of Appointments", fontsize=10)
     else:
-        plt.text(0.5, 0.5, "No department data yet",
-                 ha="center", va="center", color=SLATE)
+        ax.text(0.5, 0.5, "No department data yet",
+                ha="center", va="center", color=SLATE)
 
-    plt.title("Appointment Load by Department", fontsize=12,
-              fontweight="bold", loc="left")
-    plt.grid(axis="y", color=GRID, linewidth=0.8)
-    plt.gca().spines[["top", "right"]].set_visible(False)
-    plt.xticks(rotation=20, ha="right")
+    ax.set_title("Appointment Load by Department", fontsize=12,
+                 fontweight="bold", loc="left")
+    ax.grid(axis="y", color=GRID, linewidth=0.8)
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.set_xticks(range(len(dept_counts)))
+    ax.set_xticklabels(dept_counts["department"], rotation=40, ha="right", fontsize=8)
+    fig.tight_layout()
     _save("department_load.png", dark=True)
     plt.close()
 
@@ -307,21 +310,22 @@ def build_revenue_by_month():
     revenue = bills_copy.groupby("month")["total_amount"].sum().reset_index()
     revenue = revenue.sort_values("month")
 
-    plt.figure(figsize=(7, 3.2))
+    fig, ax = plt.subplots(figsize=(8, 3.8))
 
     if not revenue.empty:
-        bars = plt.bar(revenue["month"], revenue["total_amount"].astype(float),
+        bars = ax.bar(revenue["month"], revenue["total_amount"].astype(float),
                        color=AMBER)
-        plt.bar_label(bars, fmt="₹%.0f", padding=3, fontsize=9)
-        plt.xlabel("Month", fontsize=10)
-        plt.ylabel("Revenue (₹)", fontsize=10)
+        ax.bar_label(bars, fmt="₹%.0f", padding=3, fontsize=9)
+        ax.set_xlabel("Month", fontsize=10)
+        ax.set_ylabel("Revenue (₹)", fontsize=10)
     else:
-        plt.text(0.5, 0.5, "No billing data yet",
-                 ha="center", va="center", color=SLATE)
+        ax.text(0.5, 0.5, "No billing data yet",
+                ha="center", va="center", color=SLATE)
 
-    plt.title("Revenue by Month", fontsize=12, fontweight="bold", loc="left")
-    plt.grid(axis="y", color=GRID, linewidth=0.8)
-    plt.gca().spines[["top", "right"]].set_visible(False)
+    ax.set_title("Revenue by Month", fontsize=12, fontweight="bold", loc="left")
+    ax.grid(axis="y", color=GRID, linewidth=0.8)
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout()
     _save("revenue_by_month.png", dark=True)
     plt.close()
 
@@ -333,12 +337,12 @@ def build_payment_status():
 
     status_counts = bills_df["payment_status"].value_counts()
 
-    plt.figure(figsize=(4.5, 3.5))
+    fig, ax = plt.subplots(figsize=(5, 4))
 
     if not status_counts.empty:
         colors = {"Paid": TEAL, "Pending": CORAL, "Partially Paid": AMBER}
         wedge_colors = [colors.get(s, SLATE) for s in status_counts.index]
-        wedges, texts, autotexts = plt.pie(
+        wedges, texts, autotexts = ax.pie(
             status_counts.values,
             labels=status_counts.index,
             autopct="%1.0f%%",
@@ -347,14 +351,16 @@ def build_payment_status():
             wedgeprops={"width": 0.42, "edgecolor": "white"},
             textprops={"fontsize": 9},
         )
-        plt.legend(wedges, status_counts.index, loc="lower center",
-                   bbox_to_anchor=(0.5, -0.15), fontsize=9)
+        for t in autotexts:
+            t.set_fontsize(9)
+            t.set_fontweight("bold")
     else:
-        plt.text(0.5, 0.5, "No billing data yet",
-                 ha="center", va="center", color=SLATE)
+        ax.text(0.5, 0.5, "No billing data yet",
+                ha="center", va="center", color=SLATE)
 
-    plt.title("Payment Status Distribution", fontsize=12,
-              fontweight="bold", loc="left")
+    ax.set_title("Payment Status Distribution", fontsize=12,
+                 fontweight="bold", loc="left")
+    fig.tight_layout()
     _save("payment_status.png", dark=True)
     plt.close()
 
@@ -366,23 +372,24 @@ def build_patient_admission_mix():
 
     status_counts = patients_df["admission_status"].value_counts()
 
-    plt.figure(figsize=(5, 3.2))
+    fig, ax = plt.subplots(figsize=(6, 3.5))
 
     if not status_counts.empty:
         colors = [TEAL, AMBER, CORAL][:len(status_counts)]
-        bars = plt.barh(status_counts.index, status_counts.values, color=colors)
-        plt.bar_label(bars, padding=3, fontsize=9)
-        plt.xlabel("Number of Patients", fontsize=10)
-        plt.ylabel("Admission Status", fontsize=10)
-        plt.legend(bars, status_counts.index, loc="lower right", fontsize=9)
+        bars = ax.barh(status_counts.index, status_counts.values, color=colors)
+        ax.bar_label(bars, padding=3, fontsize=10, fontweight="bold")
+        ax.set_xlabel("Number of Patients", fontsize=10)
+        ax.set_ylabel("")
+        ax.legend(bars, status_counts.index, loc="lower right", fontsize=9, framealpha=0.9)
     else:
-        plt.text(0.5, 0.5, "No patient data yet",
-                 ha="center", va="center", color=SLATE)
+        ax.text(0.5, 0.5, "No patient data yet",
+                ha="center", va="center", color=SLATE)
 
-    plt.title("Patients by Admission Status", fontsize=12,
-              fontweight="bold", loc="left")
-    plt.grid(axis="x", color=GRID, linewidth=0.8)
-    plt.gca().spines[["top", "right"]].set_visible(False)
+    ax.set_title("Patients by Admission Status", fontsize=12,
+                 fontweight="bold", loc="left")
+    ax.grid(axis="x", color=GRID, linewidth=0.8)
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout()
     _save("patient_admission_mix.png", dark=True)
     plt.close()
 
@@ -392,24 +399,25 @@ def build_patient_admission_mix():
 def build_bill_amount_histogram():
     print("[6/9] Histogram — plt.hist() — Bill Amount Distribution")
 
-    plt.figure(figsize=(6, 3.5))
+    fig, ax = plt.subplots(figsize=(7, 3.8))
 
     if not bills_df.empty and bills_df["total_amount"].notna().any():
         amounts = bills_df["total_amount"].dropna().astype(float)
-        n, bins, patches = plt.hist(amounts, bins=8, color=TEAL,
-                                     edgecolor="white", alpha=0.85)
+        n, bins, patches = ax.hist(amounts, bins=8, color=TEAL,
+                                    edgecolor="white", alpha=0.85)
         for i, patch in enumerate(patches):
             patch.set_facecolor(CHART_COLORS[i % len(CHART_COLORS)])
-        plt.xlabel("Total Bill Amount (₹)", fontsize=10)
-        plt.ylabel("Frequency", fontsize=10)
+        ax.set_xlabel("Total Bill Amount (₹)", fontsize=10)
+        ax.set_ylabel("Frequency", fontsize=10)
     else:
-        plt.text(0.5, 0.5, "No billing data yet",
-                 ha="center", va="center", color=SLATE)
+        ax.text(0.5, 0.5, "No billing data yet",
+                ha="center", va="center", color=SLATE)
 
-    plt.title("Distribution of Bill Amounts", fontsize=12,
-              fontweight="bold", loc="left")
-    plt.grid(axis="y", color=GRID, linewidth=0.8)
-    plt.gca().spines[["top", "right"]].set_visible(False)
+    ax.set_title("Distribution of Bill Amounts", fontsize=12,
+                 fontweight="bold", loc="left")
+    ax.grid(axis="y", color=GRID, linewidth=0.8)
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout()
     _save("bill_histogram.png", dark=True)
     plt.close()
 
@@ -419,32 +427,33 @@ def build_bill_amount_histogram():
 def build_fee_vs_total_scatter():
     print("[7/9] Scatter Plot — plt.scatter() — Fee vs Total Bill")
 
-    plt.figure(figsize=(6, 3.5))
+    fig, ax = plt.subplots(figsize=(7, 3.8))
 
     if not bills_df.empty and bills_df["consultation_fee"].notna().any():
         fees = bills_df["consultation_fee"].astype(float)
         totals = bills_df["total_amount"].astype(float)
-        plt.scatter(fees, totals, c=TEAL, s=60, alpha=0.7,
-                    edgecolors="white", linewidths=0.8, label="Bills")
+        ax.scatter(fees, totals, c=TEAL, s=60, alpha=0.7,
+                   edgecolors="white", linewidths=0.8, label="Bills")
         if len(fees) > 1:
             z = np.polyfit(fees, totals, 1)
             p = np.poly1d(z)
             margin = (fees.max() - fees.min()) * 0.1 if fees.max() != fees.min() else 100
             x_line = np.linspace(fees.min() - margin, fees.max() + margin, 100)
             y_line = np.clip(p(x_line), 0, None)
-            plt.plot(x_line, y_line, "--", color=CORAL, linewidth=1.5,
-                     alpha=0.7, label="Trend Line")
-        plt.xlabel("Consultation Fee (₹)", fontsize=10)
-        plt.ylabel("Total Bill Amount (₹)", fontsize=10)
-        plt.legend(loc="upper left", fontsize=9)
+            ax.plot(x_line, y_line, "--", color=CORAL, linewidth=1.5,
+                    alpha=0.7, label="Trend Line")
+        ax.set_xlabel("Consultation Fee (₹)", fontsize=10)
+        ax.set_ylabel("Total Bill Amount (₹)", fontsize=10)
+        ax.legend(loc="upper left", fontsize=9, framealpha=0.9)
     else:
-        plt.text(0.5, 0.5, "No data for scatter plot",
-                 ha="center", va="center", color=SLATE)
+        ax.text(0.5, 0.5, "No data for scatter plot",
+                ha="center", va="center", color=SLATE)
 
-    plt.title("Consultation Fee vs Total Bill", fontsize=12,
-              fontweight="bold", loc="left")
-    plt.grid(color=GRID, linewidth=0.8)
-    plt.gca().spines[["top", "right"]].set_visible(False)
+    ax.set_title("Consultation Fee vs Total Bill", fontsize=12,
+                 fontweight="bold", loc="left")
+    ax.grid(color=GRID, linewidth=0.8)
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout()
     _save("fee_vs_total_scatter.png", dark=True)
     plt.close()
 
@@ -456,28 +465,29 @@ def build_gender_pie():
 
     gender_counts = patients_df["gender"].value_counts()
 
-    plt.figure(figsize=(4.5, 3.5))
+    fig, ax = plt.subplots(figsize=(5, 4))
 
     if not gender_counts.empty:
         colors = [TEAL, AMBER, CORAL, "#4E9E8F"][:len(gender_counts)]
-        wedges, texts, autotexts = plt.pie(
+        wedges, texts, autotexts = ax.pie(
             gender_counts.values,
             labels=gender_counts.index,
             autopct="%1.0f%%",
             colors=colors,
             startangle=90,
             explode=[0.03] * len(gender_counts),
-            shadow=True,
             textprops={"fontsize": 10},
         )
-        plt.legend(wedges, gender_counts.index, loc="lower center",
-                   bbox_to_anchor=(0.5, -0.15), fontsize=9)
+        for t in autotexts:
+            t.set_fontsize(10)
+            t.set_fontweight("bold")
     else:
-        plt.text(0.5, 0.5, "No patient data yet",
-                 ha="center", va="center", color=SLATE)
+        ax.text(0.5, 0.5, "No patient data yet",
+                ha="center", va="center", color=SLATE)
 
-    plt.title("Patient Gender Distribution", fontsize=12,
-              fontweight="bold", loc="left")
+    ax.set_title("Patient Gender Distribution", fontsize=12,
+                 fontweight="bold", loc="left")
+    fig.tight_layout()
     _save("gender_pie.png", dark=True)
     plt.close()
 
@@ -495,20 +505,22 @@ def build_weekday_appointments():
                  "Friday", "Saturday", "Sunday"]
     day_counts = appts["day_name"].value_counts().reindex(day_order, fill_value=0)
 
-    plt.figure(figsize=(7, 3.2))
+    fig, ax = plt.subplots(figsize=(8, 3.8))
 
-    bars = plt.bar(day_counts.index, day_counts.values,
-                   color=CHART_COLORS[:len(day_counts)])
-    plt.bar_label(bars, padding=3, fontsize=9)
-    plt.xlabel("Day of the Week", fontsize=10)
-    plt.ylabel("Number of Appointments", fontsize=10)
-    plt.legend(bars, day_counts.index, loc="upper right", fontsize=8)
+    bars = ax.bar(day_counts.index, day_counts.values,
+                  color=CHART_COLORS[:len(day_counts)])
+    ax.bar_label(bars, padding=3, fontsize=10, fontweight="bold")
+    ax.set_xlabel("Day of the Week", fontsize=10)
+    ax.set_ylabel("Number of Appointments", fontsize=10)
+    ax.legend(bars, day_counts.index, loc="upper right", fontsize=8, ncol=2, framealpha=0.9)
 
-    plt.title("Appointments by Day of Week", fontsize=12,
-              fontweight="bold", loc="left")
-    plt.grid(axis="y", color=GRID, linewidth=0.8)
-    plt.gca().spines[["top", "right"]].set_visible(False)
-    plt.xticks(rotation=20, ha="right")
+    ax.set_title("Appointments by Day of Week", fontsize=12,
+                 fontweight="bold", loc="left")
+    ax.grid(axis="y", color=GRID, linewidth=0.8)
+    ax.spines[["top", "right"]].set_visible(False)
+    ax.set_xticks(range(len(day_counts)))
+    ax.set_xticklabels(day_counts.index, rotation=30, ha="right", fontsize=9)
+    fig.tight_layout()
     _save("weekday_appointments.png", dark=True)
     plt.close()
 
