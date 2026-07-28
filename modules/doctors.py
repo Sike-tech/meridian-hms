@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
+from datetime import date
 from db import query, execute
 
 doctors_bp = Blueprint("doctors", __name__, url_prefix="/doctors")
@@ -91,11 +92,12 @@ def new_doctor():
                 department,
                 phone,
                 email,
-                status
+                status,
+                joined_on
             )
 
             VALUES
-            (%s,%s,%s,%s,%s,%s,%s)
+            (%s,%s,%s,%s,%s,%s,%s,%s)
             """,
             (
                 f["first_name"],
@@ -105,6 +107,7 @@ def new_doctor():
                 f["phone"],
                 f["email"],
                 f.get("status", "Active"),
+                f.get("joined_on") or date.today().isoformat(),
             ),
         )
 
@@ -112,7 +115,7 @@ def new_doctor():
 
         return redirect(url_for("doctors.list_doctors"))
 
-    return render_template("doctors/form.html", doctor=None)
+    return render_template("doctors/form.html", doctor=None, today=date.today().isoformat())
 
 
 @doctors_bp.route("/<int:doctor_id>")
@@ -168,7 +171,8 @@ def edit_doctor(doctor_id):
                 department=%s,
                 phone=%s,
                 email=%s,
-                status=%s
+                status=%s,
+                joined_on=%s
 
             WHERE doctor_id=%s
             """,
@@ -180,6 +184,7 @@ def edit_doctor(doctor_id):
                 f["phone"],
                 f["email"],
                 f["status"],
+                f.get("joined_on") or date.today().isoformat(),
                 doctor_id,
             ),
         )
@@ -202,6 +207,7 @@ def edit_doctor(doctor_id):
     return render_template(
         "doctors/form.html",
         doctor=doctor,
+        today=date.today().isoformat(),
     )
 
 
