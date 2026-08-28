@@ -1,0 +1,25 @@
+doctor_id,first_name,last_name,specialization,department,consultation_fee,status
+1,Priya,Sharma,Cardiology,Cardiology,1500.00,Active
+2,Rahul,Verma,Orthopedics,Orthopedics,1200.00,Active
+3,Ananya,Patel,Neurology,Neurology,1800.00,Active
+4,Vikram,Reddy,General Medicine,General Medicine,800.00,Active
+5,Meera,Iyer,Pediatrics,Pediatrics,1000.00,On Leave
+6,Arjun,Nair,Dermatology,Dermatology,900.00,Active
+7,Sunita,Gupta,Oncology,Oncology,2000.00,Active
+8,Kavitha,Menon,ENT,ENT,0.00,Active
+9,Sanjay,Mehta,Cardiology,Cardiology,1600.00,Active
+10,Ritu,Malhotra,Gynecology,Gynecology,1300.00,Active
+11,Aakash,Chopra,Orthopedics,Orthopedics,1250.00,Active
+12,Divya,Bhatt,Neurology,Neurology,1900.00,On Leave
+13,Karthik,Subramanian,Pediatrics,Pediatrics,1050.00,Active
+14,Neelam,Saxena,Dermatology,Dermatology,950.00,Active
+15,Rohan,Desai,Oncology,Oncology,2100.00,Active
+16,Shalini,Pillai,ENT,ENT,1100.00,Active
+17,Gaurav,Bansal,General Medicine,General Medicine,850.00,Active
+18,Anjali,Sethi,Psychiatry,Psychiatry,1400.00,Active
+19,Manoj,Kulkarni,Urology,Urology,1500.00,Active
+20,Preeti,Aggarwal,Ophthalmology,Ophthalmology,1000.00,Active
+21,Vivek,Ranjan,Gastroenterology,Gastroenterology,1700.00,Active
+22,Nisha,Krishnan,Pulmonology,Pulmonology,1350.00,On Leave
+23,Suresh,Yadav,Nephrology,Nephrology,1600.00,Active
+24,Farhan,Sheikh,Endocrinology,Endocrinology,1450.00,Active

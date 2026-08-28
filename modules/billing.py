@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from datetime import date
 from db import query, execute
+from modules.analytics import generate_all_charts
 
 billing_bp = Blueprint("billing", __name__, url_prefix="/billing")
 
@@ -71,6 +72,10 @@ def new_bill():
              f.get("payment_status", "Pending"), f.get("payment_method")),
         )
         flash("Invoice created.", "success")
+        try:
+            generate_all_charts()
+        except Exception:
+            pass
         return redirect(url_for("billing.list_bills"))
 
     patients = query("SELECT patient_id, first_name, last_name FROM patients ORDER BY first_name")
@@ -88,6 +93,10 @@ def update_payment_status(bill_id):
     execute("UPDATE bills SET payment_status=%s, payment_method=%s WHERE bill_id=%s",
             (new_status, method, bill_id))
     flash("Payment status updated.", "success")
+    try:
+        generate_all_charts()
+    except Exception:
+        pass
     return redirect(url_for("billing.list_bills"))
 
 
@@ -95,4 +104,8 @@ def update_payment_status(bill_id):
 def delete_bill(bill_id):
     execute("DELETE FROM bills WHERE bill_id=%s", (bill_id,))
     flash("Invoice deleted.", "success")
+    try:
+        generate_all_charts()
+    except Exception:
+        pass
     return redirect(url_for("billing.list_bills"))

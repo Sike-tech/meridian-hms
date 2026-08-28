@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from db import query, execute
+from modules.analytics import generate_all_charts
 
 appointments_bp = Blueprint("appointments", __name__, url_prefix="/appointments")
 
@@ -76,6 +77,10 @@ def new_appointment():
              f["appointment_time"], f.get("reason"), f.get("status", "Scheduled")),
         )
         flash("Appointment scheduled.", "success")
+        try:
+            generate_all_charts()
+        except Exception:
+            pass
         return redirect(url_for("appointments.list_appointments"))
 
     patients = query("SELECT patient_id, first_name, last_name FROM patients ORDER BY first_name")
@@ -88,6 +93,10 @@ def update_status(appointment_id):
     new_status = request.form["status"]
     execute("UPDATE appointments SET status=%s WHERE appointment_id=%s", (new_status, appointment_id))
     flash(f"Appointment marked as {new_status}.", "success")
+    try:
+        generate_all_charts()
+    except Exception:
+        pass
     return redirect(url_for("appointments.list_appointments"))
 
 
@@ -95,4 +104,8 @@ def update_status(appointment_id):
 def delete_appointment(appointment_id):
     execute("DELETE FROM appointments WHERE appointment_id=%s", (appointment_id,))
     flash("Appointment cancelled and removed.", "success")
+    try:
+        generate_all_charts()
+    except Exception:
+        pass
     return redirect(url_for("appointments.list_appointments"))

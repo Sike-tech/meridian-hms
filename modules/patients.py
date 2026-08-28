@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from datetime import date
 from db import query, execute
+from modules.analytics import generate_all_charts
 
 patients_bp = Blueprint("patients", __name__, url_prefix="/patients")
 
@@ -64,6 +65,10 @@ def new_patient():
              f.get("ward"), date.today().isoformat()),
         )
         flash("Patient registered successfully.", "success")
+        try:
+            generate_all_charts()
+        except Exception:
+            pass
         return redirect(url_for("patients.list_patients"))
     return render_template("patients/form.html", patient=None)
 
@@ -94,6 +99,10 @@ def edit_patient(patient_id):
              f.get("emergency_contact"), f.get("admission_status"), f.get("ward"), patient_id),
         )
         flash("Patient record updated.", "success")
+        try:
+            generate_all_charts()
+        except Exception:
+            pass
         return redirect(url_for("patients.view_patient", patient_id=patient_id))
     patient = query("SELECT * FROM patients WHERE patient_id=%s", (patient_id,), one=True)
     return render_template("patients/form.html", patient=patient)
@@ -103,4 +112,8 @@ def edit_patient(patient_id):
 def delete_patient(patient_id):
     execute("DELETE FROM patients WHERE patient_id=%s", (patient_id,))
     flash("Patient record removed.", "success")
+    try:
+        generate_all_charts()
+    except Exception:
+        pass
     return redirect(url_for("patients.list_patients"))

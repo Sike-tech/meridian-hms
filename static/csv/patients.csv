@@ -1,0 +1,56 @@
+patient_id,first_name,last_name,gender,blood_group,admission_status,ward
+1,Amit,Singh,Male,O+,Outpatient,
+2,Priyanka,Das,Female,A+,Admitted,Cardiac Ward
+3,Ravi,Kumar,Male,B-,Outpatient,
+4,Sneha,Joshi,Female,AB+,Discharged,
+5,Mohammed,Ali,Male,A-,Admitted,Ortho Ward
+6,Lakshmi,Rao,Female,O-,Outpatient,
+7,Deepak,Mishra,Male,B+,Outpatient,
+8,Neha,Kapoor,Female,A+,Admitted,Neuro Ward
+9,Rajesh,Tiwari,Male,O+,Discharged,
+10,Pooja,Verma,Female,AB-,Outpatient,
+11,Aditya,Bose,Male,O+,Outpatient,
+12,Ishita,Reddy,Female,B+,Admitted,General Ward
+13,Nikhil,Sharma,Male,A+,Outpatient,
+14,Tara,Menon,Female,AB+,Discharged,
+15,Karan,Malhotra,Male,O-,Admitted,Cardiac Ward
+16,Simran,Kaur,Female,B-,Outpatient,
+17,Rohit,Nair,Male,A-,Admitted,Neuro Ward
+18,Ananya,Ghosh,Female,O+,Outpatient,
+19,Sameer,Khan,Male,AB-,Discharged,
+20,Divya,Pillai,Female,A+,Outpatient,
+21,Harsh,Vardhan,Male,B+,Admitted,Ortho Ward
+22,Meghna,Rao,Female,O+,Outpatient,
+23,Aryan,Gupta,Male,A-,Outpatient,
+24,Kavya,Iyer,Female,AB+,Admitted,General Ward
+25,Varun,Chauhan,Male,O-,Discharged,
+26,Riya,Saxena,Female,B+,Outpatient,
+27,Ajay,Deshmukh,Male,A+,Admitted,Cardiac Ward
+28,Sonali,Banerjee,Female,O+,Outpatient,
+29,Imran,Qureshi,Male,AB-,Outpatient,
+30,Pallavi,Joshi,Female,A-,Discharged,
+31,Rakesh,Pandey,Male,O+,Outpatient,
+32,Shreya,Mukherjee,Female,A+,Admitted,General Ward
+33,Deepak,Chawla,Male,B+,Outpatient,
+34,Anita,Verma,Female,AB+,Discharged,
+35,Sachin,Kulkarni,Male,A-,Admitted,Cardiac Ward
+36,Neetu,Sharma,Female,O-,Outpatient,
+37,Abhishek,Roy,Male,B-,Admitted,Neuro Ward
+38,Priya,Nambiar,Female,A+,Outpatient,
+39,Vishal,Thakur,Male,AB-,Discharged,
+40,Komal,Jain,Female,O+,Outpatient,
+41,Tarun,Reddy,Male,B+,Admitted,Ortho Ward
+42,Aarti,Deshpande,Female,A-,Outpatient,
+43,Naveen,Kumar,Male,O-,Outpatient,
+44,Sana,Ansari,Female,AB+,Admitted,General Ward
+45,Manish,Agarwal,Male,A+,Discharged,
+46,Ruchi,Kapoor,Female,B+,Outpatient,
+47,Yash,Patel,Male,O+,Admitted,Cardiac Ward
+48,Lata,Krishnan,Female,A-,Outpatient,
+49,Faisal,Khan,Male,AB-,Outpatient,
+50,Snehal,Patil,Female,O+,Discharged,
+51,Gopal,Iyer,Male,B+,Outpatient,
+52,Meenakshi,Sundaram,Female,A+,Admitted,Neuro Ward
+53,Dinesh,Rawat,Male,O-,Outpatient,
+54,Bhavna,Shah,Female,AB+,Outpatient,
+55,Rohan,Kapoor,Male,A-,Discharged,

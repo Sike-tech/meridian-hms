@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from datetime import date
 from db import query, execute
+from modules.analytics import generate_all_charts
 
 doctors_bp = Blueprint("doctors", __name__, url_prefix="/doctors")
 
@@ -112,7 +113,10 @@ def new_doctor():
         )
 
         flash("Doctor added successfully.", "success")
-
+        try:
+            generate_all_charts()
+        except Exception:
+            pass
         return redirect(url_for("doctors.list_doctors"))
 
     return render_template("doctors/form.html", doctor=None, today=date.today().isoformat())
@@ -190,7 +194,10 @@ def edit_doctor(doctor_id):
         )
 
         flash("Doctor updated.", "success")
-
+        try:
+            generate_all_charts()
+        except Exception:
+            pass
         return redirect(
             url_for(
                 "doctors.view_doctor",
@@ -220,5 +227,8 @@ def delete_doctor(doctor_id):
     )
 
     flash("Doctor removed.", "success")
-
+    try:
+        generate_all_charts()
+    except Exception:
+        pass
     return redirect(url_for("doctors.list_doctors"))
