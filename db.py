@@ -3,8 +3,6 @@ db.py — thin MySQL connection layer.
 
 All Python code (routes, analytics) talks to MySQL through the two helpers
 below: `query()` for SELECTs and `execute()` for INSERT/UPDATE/DELETE.
-Keeping this in one place means the rest of the app never touches
-mysql.connector directly.
 """
 import mysql.connector
 from mysql.connector import pooling

@@ -1,8 +1,7 @@
 """
 config.py — all environment-specific settings live here.
 
-Edit the values below (or better, set them as environment variables)
-to match your MySQL server before running the app.
+Set the environment variables to match your MySQL server (TiDB Cloud, local, etc.)
 """
 import os
 
