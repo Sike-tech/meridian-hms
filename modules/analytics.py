@@ -605,6 +605,8 @@ def compute_kpis(p_df=None, a_df=None, b_df=None):
 
 @analytics_bp.route("/")
 def dashboard():
+    _generate_all()
+
     series_head = fee_series.head(5)
     series_tail = fee_series.tail(3)
     series_stats = {
@@ -657,20 +659,27 @@ def dashboard():
 
 
 # ══════════════════════════════════════════════════════════════════
-#  Generate all charts and CSV files (runs in both IDLE and Flask)
+#  Generate all charts and CSV files (lazy — runs on first dashboard visit)
 # ══════════════════════════════════════════════════════════════════
 
-try:
-    build_appointments_trend()
-    build_department_load()
-    build_revenue_by_month()
-    build_payment_status()
-    build_patient_admission_mix()
-    build_bill_amount_histogram()
-    build_fee_vs_total_scatter()
-    build_gender_pie()
-    build_weekday_appointments()
-    export_csv_files()
-except Exception as _e:
-    print(f"[analytics] chart/CSV generation skipped at startup: {_e}")
-print("\nAll 9 charts (light + dark) + 4 CSV files generated successfully.")
+_charts_generated = False
+
+def _generate_all():
+    global _charts_generated
+    if _charts_generated:
+        return
+    try:
+        build_appointments_trend()
+        build_department_load()
+        build_revenue_by_month()
+        build_payment_status()
+        build_patient_admission_mix()
+        build_bill_amount_histogram()
+        build_fee_vs_total_scatter()
+        build_gender_pie()
+        build_weekday_appointments()
+        export_csv_files()
+        _charts_generated = True
+        print("\nAll 9 charts (light + dark) + 4 CSV files generated successfully.")
+    except Exception as _e:
+        print(f"[analytics] chart/CSV generation skipped: {_e}")
