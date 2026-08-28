@@ -1,12 +1,10 @@
-import pandas as pd
 from flask import Flask, render_template, redirect, url_for
 from config import SECRET_KEY
-from db import query
 from modules.patients import patients_bp
 from modules.doctors import doctors_bp
 from modules.appointments import appointments_bp
 from modules.billing import billing_bp
-from modules.analytics import analytics_bp, compute_kpis
+from modules.analytics import analytics_bp
 
 
 def create_app():
